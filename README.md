@@ -256,19 +256,6 @@ rama-juan
 
 ---
 
-# Recomendación para Equipos Universitarios
-
-Usar ramas por PERSONA:
-
-```text
-rama-gerardo
-rama-juan
-rama-maria
-```
-
-Es más fácil de controlar y organizar.
-
----
 
 # Flujo Visual Sencillo
 
