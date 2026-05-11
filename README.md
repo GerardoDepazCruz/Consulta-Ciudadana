@@ -1,5 +1,23 @@
 # Consulta-Ciudadana
 
+- Python 3.11
+- MySQL Workbench 8.0 CE
+
+### Para compilar (ejecutar)
+
+Activar entorno virtual y ejecutar:
+```bash
+venv\Scripts\activate
+```
+```bash
+python app.py
+```
+
+### Si es que les pide importaciones
+
+- pip install -r requirements.txt
+- pip install opencv-python opencv-contrib-python face-recognition numpy
+
 
 # Flujo de Trabajo del Proyecto - GitHub
 
