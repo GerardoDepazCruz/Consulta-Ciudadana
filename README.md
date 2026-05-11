@@ -33,6 +33,36 @@ cd nombre-del-proyecto
 
 ---
 
+## Configurar Git (solo la primera vez)
+
+Si Git muestra el error:
+
+```text
+Author identity unknown
+```
+
+Configurar nombre y correo:
+
+```bash
+git config --global user.name "Gerardo Depaz"
+git config --global user.email "TU_CORREO_GITHUB"
+```
+
+Ejemplo:
+
+```bash
+git config --global user.name "Gerardo Depaz"
+git config --global user.email "gerardo@gmail.com"
+```
+
+Verificar configuración:
+
+```bash
+git config --global --list
+```
+
+---
+
 # 2. Antes de trabajar SIEMPRE
 
 Todos deben ejecutar primero:
