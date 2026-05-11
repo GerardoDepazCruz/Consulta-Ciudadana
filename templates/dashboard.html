@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .access-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h2>Bienvenido, {{ user_name }}!</h2>
+            <p>¿Qué trámite deseas realizar hoy?</p>
+            <div class="access-badge">
+                {% if session.get('face_login') %}
+                    👤 Acceso mediante reconocimiento facial
+                {% else %}
+                    🔐 Acceso mediante DNI y contraseña
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Licencia')">
+                <div class="card-icon">🚗</div>
+                <h3>Licencia</h3>
+                <p>Gestión de licencias municipales</p>
+            </div>
+            
+            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Partidas')">
+                <div class="card-icon">📄</div>
+                <h3>Partidas</h3>
+                <p>Partidas de nacimiento, matrimonio</p>
+            </div>
+            
+            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Padrón')">
+                <div class="card-icon">📋</div>
+                <h3>Padrón</h3>
+                <p>Padrón municipal</p>
+            </div>
+            
+            <div class="dashboard-card" onclick="alert('Próximamente: Historial de trámites')">
+                <div class="card-icon">📊</div>
+                <h3>Mis Trámites</h3>
+                <p>Historial y seguimiento</p>
+            </div>
+            
+            <div class="dashboard-card" onclick="alert('Próximamente: Citas programadas')">
+                <div class="card-icon">📅</div>
+                <h3>Citas</h3>
+                <p>Citas programadas</p>
+            </div>
+            
+            <div class="dashboard-card" onclick="alert('Próximamente: Perfil')">
+                <div class="card-icon">👤</div>
+                <h3>Mi Perfil</h3>
+                <p>Mis datos personales</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+    
+    <script>
+        function logout() {
+            window.location.href = '/logout';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CABOT - Consulta Ciudadana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="index-page">
+    <div class="container">
+        <div class="welcome-card">
+            <div class="logo-container">
+                <div class="logo-icon">🏛️</div>
+                <h1 class="welcome-title">CABOT</h1>
+                <p class="welcome-subtitle">Consulta Ciudadana</p>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="window.location.href='/login'">
+                    <span class="btn-icon">🔐</span>
+                    Iniciar Sesión (DNI + Contraseña)
+                </button>
+                
+                <button class="btn btn-secondary" onclick="window.location.href='/register'">
+                    <span class="btn-icon">📝</span>
+                    Registrarse
+                </button>
+                
+                <button class="btn btn-facial" onclick="window.location.href='/face_login_page'">
+                    <span class="btn-icon">😀</span>
+                    Iniciar con Reconocimiento Facial
+                </button>
+            </div>
+            
+            <div class="info-text">
+                <p>🔹 Trámites municipales | 🔹 Citas en línea | 🔹 Asistente virtual</p>
+                <p>✨ Regístrate con tu rostro para un acceso más rápido</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Verificar si ya hay sesión
+        fetch('/api/check_session')
+            .then(res => res.json())
+            .then(data => {
+                if (data.logged_in) {
+                    window.location.href = '/dashboard';
+                }
+            });
+    </script>
+</body>
+</html>
