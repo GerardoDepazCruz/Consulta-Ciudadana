@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 import cv2
 import numpy as np
-import face_recognition
+# import face_recognition  # comentar hasta instalar dlib
 import base64
 import json
 
