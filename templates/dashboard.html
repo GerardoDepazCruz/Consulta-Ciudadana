@@ -11,47 +11,43 @@
 
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
-        <!-- Logo izquierda -->
         <div class="nav-logo">
             <img src="{{ url_for('static', filename='images/logo1.png') }}"
-                style="width:50px;height:50px;object-fit:contain;">
+                style="width:50px;height:50px;object-fit:contain;" alt="Logo CABOT">
             <span class="nav-logo-text">CABOT</span>
         </div>
 
-        <!-- Opciones centro -->
         <div class="nav-links">
-            <a href="#" class="nav-item active">
-                <img src="{{ url_for('static', filename='images/home.png') }}" style="width:40px;height:35px;">
+            <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                <img src="{{ url_for('static', filename='images/home.png') }}" style="width:40px;height:35px;" alt="Inicio">
                 <span class="nav-label">Inicio</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Trámites')">
-                <img src="{{ url_for('static', filename='images/tramites.png') }}" style="width:40px;height:35px;">
+            <a href="{{ url_for('mis_tramites') }}" class="nav-item">
+                <img src="{{ url_for('static', filename='images/tramites.png') }}" style="width:40px;height:35px;" alt="Trámites">
                 <span class="nav-label">Trámites</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Citas')">
-                <img src="{{ url_for('static', filename='images/citas.png') }}" style="width:40px;height:35px;">
+            <a href="{{ url_for('citas') }}" class="nav-item">
+                <img src="{{ url_for('static', filename='images/citas.png') }}" style="width:40px;height:35px;" alt="Citas">
                 <span class="nav-label">Citas</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Padrón')">
-                <img src="{{ url_for('static', filename='images/padron.png') }}" style="width:35px;height:40px;">
+            <a href="{{ url_for('padron') }}" class="nav-item">
+                <img src="{{ url_for('static', filename='images/padron.png') }}" style="width:35px;height:40px;" alt="Padrón">
                 <span class="nav-label">Padrón</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Licencias')">
-                <img src="{{ url_for('static', filename='images/licencia.png') }}" style="width:35px;height:38px;">
+            <a href="{{ url_for('licencias') }}" class="nav-item">
+                <img src="{{ url_for('static', filename='images/licencia.png') }}" style="width:35px;height:38px;" alt="Licencias">
                 <span class="nav-label">Licencias</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Partidas')">
-                <img src="{{ url_for('static', filename='images/partida.png') }}" style="width:40px;height:35px;">
+            <a href="{{ url_for('partidas') }}" class="nav-item">
+                <img src="{{ url_for('static', filename='images/partida.png') }}" style="width:40px;height:35px;" alt="Partidas">
                 <span class="nav-label">Partidas</span>
             </a>
         </div>
 
-        <!-- Perfil + cerrar sesión derecha -->
         <div class="nav-right">
             <div class="nav-profile">
-                <div class="profile-avatar"><img src="{{ url_for('static', filename='images/perfil.png') }}" style="width:45px;height:40px;"></div>
+                <div class="profile-avatar"><img src="{{ url_for('static', filename='images/perfil.png') }}" style="width:45px;height:40px;" alt="Avatar"></div>
                 <span class="profile-name">{{ user_name }}</span>
                 <div class="profile-dropdown">
                     <div class="dropdown-item">
@@ -70,10 +66,8 @@
         </div>
     </nav>
 
-    <!-- CONTENIDO -->
     <div class="dashboard-content">
 
-        <!-- Bienvenida -->
         <div class="welcome-banner">
             <div>
                 <h2>Bienvenido, {{ user_name }}! 👋</h2>
@@ -88,39 +82,38 @@
             </div>
         </div>
 
-        <!-- Grid de cards -->
         <div class="dashboard-grid">
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Licencia')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('licencias') }}'">
                 <div class="card-icon">🚗</div>
                 <h3>Licencia</h3>
                 <p>Gestión de licencias municipales</p>
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Partidas')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('partidas') }}'">
                 <div class="card-icon">📄</div>
                 <h3>Partidas</h3>
                 <p>Partidas de nacimiento, matrimonio</p>
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Padrón')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('padron') }}'">
                 <div class="card-icon">📋</div>
                 <h3>Padrón</h3>
                 <p>Padrón municipal</p>
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Historial de trámites')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('mis_tramites') }}'">
                 <div class="card-icon">📊</div>
                 <h3>Mis Trámites</h3>
                 <p>Historial y seguimiento</p>
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Citas programadas')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('citas') }}'">
                 <div class="card-icon">📅</div>
                 <h3>Citas</h3>
                 <p>Citas programadas</p>
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Perfil')">
+            <div class="dashboard-card" onclick="window.location.href='{{ url_for('mi_perfil') }}'">
                 <div class="card-icon">👤</div>
                 <h3>Mi Perfil</h3>
                 <p>Mis datos personales</p>
@@ -128,11 +121,6 @@
         </div>
     </div>
 
-    <script>
-        function logout() {
-            window.location.href = '/logout';
-        }
-    </script>
 </body>
 
 </html>

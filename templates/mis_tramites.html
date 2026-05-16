@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Trámites - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #f4f7fb; --primary: #1e6bb8; --text-dark: #2c3e50; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-dark); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-back { background: #e1e8ed; color: var(--text-dark); padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #e1e8ed; }
+        th { background-color: var(--primary); color: white; }
+        tr:nth-child(even) { background-color: #f9fbfd; }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; background: #e1e8ed; color: #333;}
+        .badge.evaluacion { background: #fff3cd; color: #856404; }
+        .badge.aprobado { background: #d4edda; color: #155724; }
+        .badge.cancelado { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 Mis Trámites Municipales</h1>
+        <a href="{{ url_for('dashboard') }}" class="btn-back">⬅ Volver al Inicio</a>
+    </div>
+
+    {% if tramites %}
+    <table>
+        <thead><tr><th>N° Expediente</th><th>Trámite</th><th>Fecha Ingreso</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody>
+            {% for t in tramites %}
+            <tr>
+                <td><strong>{{ t.expediente }}</strong></td>
+                <td>{{ t.tipo_tramite }}</td>
+                <td>{{ t.fecha_inicio }}</td>
+                <td>
+                    <span class="badge 
+                        {% if t.estado == 'En Evaluación' %}evaluacion{% elif t.estado == 'Aprobado' %}aprobado{% elif t.estado == 'Cancelado' %}cancelado{% endif %}">
+                        {{ t.estado }}
+                    </span>
+                </td>
+                <td>{{ t.detalle }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="background: white; padding: 30px; border-radius: 12px; text-align: center;"><h2>Aún no tienes trámites registrados.</h2></div>
+    {% endif %}
+</div>
+</body>
+</html>

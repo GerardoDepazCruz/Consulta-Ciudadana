@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #f4f7fb; --primary: #1e6bb8; --text-dark: #2c3e50; --card-bg: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-dark); margin: 0; padding: 20px; }
+        
+        .container { max-width: 600px; margin: 40px auto; }
+        .card { background: var(--card-bg); padding: 40px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); position: relative; }
+        .btn-back { display: inline-block; color: #1e6bb8; text-decoration: none; font-weight: 600; margin-bottom: 20px; }
+        
+        /* Sección de la Foto de Perfil */
+        .profile-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 30px;}
+        .avatar-container { position: relative; width: 140px; height: 140px; margin-bottom: 15px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; }
+        
+        /* Botón para cambiar foto */
+        .btn-edit-photo {
+            position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; border: none; 
+            border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem;
+            display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;
+        }
+        .btn-edit-photo:hover { background: #154c85; transform: scale(1.1); }
+        input[type="file"] { display: none; }
+        
+        /* Datos del usuario */
+        .profile-name { font-size: 1.8rem; color: var(--primary); margin: 0; font-weight: 700; }
+        .profile-subtitle { color: #7f8c8d; font-size: 1rem; margin-top: 5px; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .info-box { background: #f8fafc; padding: 15px 20px; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .info-label { font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .info-value { font-size: 1.15rem; color: #334155; font-weight: 500; margin: 0; }
+        
+        /* Alertas */
+        .alert { padding: 12px; border-radius: 8px; margin-top: 15px; display: none; font-size: 0.95rem; text-align: center;}
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #fde8e8; color: #c0392b; border: 1px solid #f5c6cb; }
+        
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 30px;}
+        .btn-primary:hover { background: #154c85; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="btn-back">⬅ Volver al Dashboard</a>
+        
+        <div class="card">
+            
+            {% if datos %}
+            <div class="profile-header">
+                <div class="avatar-container">
+                    {% if datos.foto_perfil and datos.foto_perfil != 'default.png' %}
+                        <img src="{{ url_for('static', filename='uploads/perfiles/' + datos.foto_perfil) }}" id="foto_preview" class="avatar-img" alt="Foto de Perfil">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/perfil.png') }}" id="foto_preview" class="avatar-img" alt="Foto por Defecto" style="background:#e1e8ed; padding:10px;">
+                    {% endif %}
+                    
+                    <button class="btn-edit-photo" onclick="document.getElementById('file_input').click()" title="Cambiar foto">📷</button>
+                    <input type="file" id="file_input" accept="image/png, image/jpeg, image/jpg" onchange="subirFoto()">
+                </div>
+                
+                <h2 class="profile-name">{{ datos.nombres }} {{ datos.apellidos }}</h2>
+                <p class="profile-subtitle">Ciudadano Registrado</p>
+                <div id="mensaje-alerta" class="alert"></div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">DNI Identificador</div>
+                    <div class="info-value">{{ datos.dni }}</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Teléfono Celular</div>
+                    <div class="info-value">{{ datos.celular }}</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Correo Electrónico</div>
+                    <div class="info-value">{{ datos.correo }}</div>
+                </div>
+            </div>
+
+            {% else %}
+                <p style="text-align: center; color: red;">No se pudieron cargar los datos de la cuenta.</p>
+            {% endif %}
+            
+        </div>
+    </div>
+
+    <script>
+        async function subirFoto() {
+            const input = document.getElementById('file_input');
+            if(input.files.length === 0) return;
+
+            const archivo = input.files[0];
+            const maxMB = 2; // Límite de peso
+
+            if(archivo.size > (maxMB * 1024 * 1024)) {
+                mostrarMensaje('La imagen es muy pesada. Máximo 2MB.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('foto', archivo);
+
+            mostrarMensaje('Subiendo foto...', 'success');
+
+            try {
+                const response = await fetch('/api/upload-foto', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if(data.success) {
+                    // Actualiza la imagen dinámicamente en pantalla sin recargar
+                    document.getElementById('foto_preview').src = data.foto_url;
+                    // Limpia el fondo gris por si antes tenía la de default
+                    document.getElementById('foto_preview').style.background = 'none';
+                    document.getElementById('foto_preview').style.padding = '0';
+                    
+                    mostrarMensaje('¡Foto actualizada correctamente!', 'success');
+                    setTimeout(() => { document.getElementById('mensaje-alerta').style.display = 'none'; }, 3000);
+                } else {
+                    mostrarMensaje(data.message, 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('Error de conexión al subir la imagen.', 'error');
+            }
+        }
+
+        function mostrarMensaje(txt, tipo) {
+            const box = document.getElementById('mensaje-alerta'); 
+            box.textContent = txt; 
+            box.className = `alert alert-${tipo}`; 
+            box.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

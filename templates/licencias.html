@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Licencias - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #f4f7fb; --primary: #1e6bb8; --text-dark: #2c3e50; --card-bg: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-dark); margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-back { background: #e1e8ed; color: var(--text-dark); padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        .container { max-width: 750px; margin: 0 auto; }
+        .card { background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        .step-title { font-size: 1.3rem; color: var(--primary); font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        .step-number { background: var(--primary); color: white; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1rem; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 1rem; color: #555; }
+        select { width: 100%; padding: 15px; margin-bottom: 25px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1.1rem; outline: none; transition: 0.2s;}
+        select:focus { border-color: var(--primary); }
+        select option:disabled { color: #a0a0a0; font-style: italic; }
+        
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 8px; font-size: 1.2rem; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .btn-primary:hover { background: #154c85; }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #219653; }
+        
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; font-weight: 500; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #fde8e8; color: #c0392b; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🚗 Gestión de Licencias</h1>
+        <a href="{{ url_for('dashboard') }}" class="btn-back">⬅ Volver</a>
+    </div>
+
+    <div class="card">
+        <div id="mensaje-alerta" class="alert"></div>
+
+        <div class="step-title"><span class="step-number">1</span> Selecciona el trámite</div>
+        <select id="tipo_tramite">
+            <option value="">-- Elige el tipo de licencia --</option>
+            <option value="Licencia de Funcionamiento">Licencia de Funcionamiento Comercial</option>
+            <option value="Licencia de Edificación">Licencia de Edificación / Construcción</option>
+            <option value="Renovación de Licencia">Renovación de Licencia Actual</option>
+        </select>
+        <button class="btn-primary" id="btn-buscar-fechas" onclick="buscarFechas()">Buscar Horarios Disponibles</button>
+
+        <div id="reserva-section" style="display: none; margin-top: 35px; border-top: 2px solid #f4f7fb; padding-top: 30px;">
+            <div class="step-title"><span class="step-number">2</span> Elige tu horario de atención</div>
+            
+            <label for="fecha_cita">Día de la cita:</label>
+            <select id="fecha_cita" onchange="actualizarHorarios()"></select>
+            
+            <label for="hora_cita">Hora (Las opciones grises están ocupadas):</label>
+            <select id="hora_cita"></select>
+            
+            <button class="btn-primary btn-success" onclick="agendarCita()">Confirmar y Agendar Cita</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let fechasDisponibles = [];
+    
+    async function buscarFechas() {
+        const tramite = document.getElementById('tipo_tramite').value;
+        if (!tramite) return mostrarMensaje('Por favor, selecciona un trámite del Paso 1.', 'error');
+        
+        const res = await fetch(`/api/fechas-disponibles?tramite=${tramite}`);
+        const data = await res.json();
+        
+        if (data.success) {
+            fechasDisponibles = data.datos;
+            const sf = document.getElementById('fecha_cita'); 
+            sf.innerHTML = '';
+            
+            fechasDisponibles.forEach((dia, i) => { 
+                sf.innerHTML += `<option value="${i}">${dia.fecha_mostrar}</option>`; 
+            });
+            
+            actualizarHorarios();
+            document.getElementById('reserva-section').style.display = 'block';
+            document.getElementById('btn-buscar-fechas').style.display = 'none';
+        }
+    }
+
+    function actualizarHorarios() {
+        const idx = document.getElementById('fecha_cita').value;
+        const sh = document.getElementById('hora_cita'); 
+        sh.innerHTML = '';
+        
+        fechasDisponibles[idx].horarios.forEach(h => { 
+            if(h.disponible) {
+                sh.innerHTML += `<option value="${h.hora}">${h.hora}</option>`;
+            } else {
+                // Bloqueamos la selección si está ocupado
+                sh.innerHTML += `<option value="${h.hora}" disabled>${h.hora} - (No disponible)</option>`;
+            }
+        });
+    }
+
+    async function agendarCita() {
+        const tramite = document.getElementById('tipo_tramite').value;
+        const fecha = fechasDisponibles[document.getElementById('fecha_cita').value].fecha;
+        const hora = document.getElementById('hora_cita').value;
+        
+        if(!hora) return mostrarMensaje('Debes seleccionar una hora disponible.', 'error');
+
+        const res = await fetch('/api/agendar', { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({tramite, fecha, hora}) 
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+            mostrarMensaje(`¡Cita agendada! Tu expediente es: ${data.expediente}. Redirigiendo...`, 'success');
+            setTimeout(() => window.location.href = "{{ url_for('mis_tramites') }}", 2500);
+        } else {
+            mostrarMensaje(data.message, 'error');
+        }
+    }
+
+    function mostrarMensaje(txt, tipo) {
+        const box = document.getElementById('mensaje-alerta'); 
+        box.textContent = txt; 
+        box.className = `alert alert-${tipo}`; 
+        box.style.display = 'block';
+    }
+</script>
+</body>
+</html>

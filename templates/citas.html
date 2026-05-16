@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Citas Programadas - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #f4f7fb; --primary: #1e6bb8; --text-dark: #2c3e50; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-dark); margin: 0; padding: 20px; font-size: 1.1rem;}
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-back { background: #e1e8ed; color: var(--text-dark); padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        
+        .citas-grid { display: grid; gap: 20px; }
+        .cita-card { background: white; padding: 25px; border-radius: 12px; border-left: 6px solid #27ae60; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .cita-card.cancelada { border-left-color: #e74c3c; opacity: 0.8; }
+        .cita-card h3 { margin-top: 0; color: var(--primary); font-size: 1.4rem;}
+        .info-row { display: flex; margin-bottom: 10px; }
+        .info-row strong { width: 120px; color: #555; }
+        
+        .btn-cancelar { background-color: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 8px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 15px; font-size: 1rem; }
+        .btn-cancelar:hover { background-color: #fecaca; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📅 Mis Citas</h1>
+        <a href="{{ url_for('dashboard') }}" class="btn-back">⬅ Volver al Inicio</a>
+    </div>
+
+    <div class="citas-grid">
+        {% if citas %}
+            {% for cita in citas %}
+            <div class="cita-card {% if cita.estado == 'Cancelada' %}cancelada{% endif %}">
+                <h3>{{ cita.tipo_tramite }}</h3>
+                <div class="info-row"><strong>📅 Fecha:</strong> <span>{{ cita.fecha }}</span></div>
+                <div class="info-row"><strong>⏰ Hora:</strong> <span>{{ cita.hora }}</span></div>
+                <div class="info-row">
+                    <strong>📌 Estado:</strong> 
+                    <span style="color: {% if cita.estado == 'Programada' %}#27ae60{% else %}#e74c3c{% endif %}; font-weight: 700;">
+                        {{ cita.estado }}
+                    </span>
+                </div>
+                <div class="info-row"><strong>🏢 Lugar:</strong> <span>Mesa de Partes Municipal</span></div>
+                
+                {% if cita.estado == 'Programada' %}
+                <button class="btn-cancelar" onclick="cancelarCita({{ cita.id }})">❌ Cancelar esta cita</button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="background: white; padding: 30px; border-radius: 12px; text-align: center;">
+                <h2>No tienes citas agendadas.</h2>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    async function cancelarCita(citaId) {
+        if(!confirm('¿Estás seguro de que deseas cancelar esta cita? Esta acción también cancelará el trámite asociado.')) return;
+        try {
+            const response = await fetch(`/api/cancelar-cita/${citaId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+            const data = await response.json();
+            if(data.success) {
+                alert('✅ ' + data.message);
+                location.reload(); 
+            } else { alert('❌ Error: ' + data.message); }
+        } catch (error) { alert('❌ Error de conexión al intentar cancelar.'); }
+    }
+</script>
+
+</body>
+</html>
