@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - CABOT</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_style.css') }}">
 </head>
@@ -13,126 +14,233 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <!-- Logo izquierda -->
+
         <div class="nav-logo">
             <img src="{{ url_for('static', filename='images/logo1.png') }}"
                 style="width:50px;height:50px;object-fit:contain;">
             <span class="nav-logo-text">CABOT</span>
         </div>
 
-        <!-- Opciones centro -->
         <div class="nav-links">
-            <a href="#" class="nav-item active">
+
+            <a href="#" class="nav-item active" onclick="mostrarInicio()">
                 <img src="{{ url_for('static', filename='images/home.png') }}" style="width:40px;height:35px;">
                 <span class="nav-label">Inicio</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Trámites')">
-                <img src="{{ url_for('static', filename='images/tramites.png') }}" style="width:40px;height:35px;">
-                <span class="nav-label">Trámites</span>
-            </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Citas')">
-                <img src="{{ url_for('static', filename='images/citas.png') }}" style="width:40px;height:35px;">
-                <span class="nav-label">Citas</span>
-            </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Padrón')">
-                <img src="{{ url_for('static', filename='images/padron.png') }}" style="width:35px;height:40px;">
-                <span class="nav-label">Padrón</span>
-            </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Licencias')">
+
+            <a href="#" class="nav-item" onclick="mostrarTramites('licencias')">
                 <img src="{{ url_for('static', filename='images/licencia.png') }}" style="width:35px;height:38px;">
                 <span class="nav-label">Licencias</span>
             </a>
-            <a href="#" class="nav-item" onclick="alert('Próximamente: Partidas')">
+
+            <a href="#" class="nav-item" onclick="mostrarTramites('padrones')">
+                <img src="{{ url_for('static', filename='images/padron.png') }}" style="width:35px;height:40px;">
+                <span class="nav-label">Padrón</span>
+            </a>
+
+            <a href="#" class="nav-item" onclick="mostrarTramites('partidas')">
                 <img src="{{ url_for('static', filename='images/partida.png') }}" style="width:40px;height:35px;">
                 <span class="nav-label">Partidas</span>
             </a>
+
+            <a href="#" class="nav-item" onclick="mostrarCitas()">
+                <img src="{{ url_for('static', filename='images/citas.png') }}" style="width:40px;height:35px;">
+                <span class="nav-label">Citas</span>
+            </a>
+
         </div>
 
-        <!-- Perfil + cerrar sesión derecha -->
         <div class="nav-right">
+
             <div class="nav-profile">
-                <div class="profile-avatar"><img src="{{ url_for('static', filename='images/perfil.png') }}" style="width:45px;height:40px;"></div>
+
+                <div class="profile-avatar">
+                    <img src="{{ url_for('static', filename='images/perfil.png') }}" style="width:45px;height:40px;">
+                </div>
+
                 <span class="profile-name">{{ user_name }}</span>
+
                 <div class="profile-dropdown">
+
                     <div class="dropdown-item">
+
                         {% if session.get('face_login') %}
                         👤 Acceso facial
                         {% else %}
                         🔐 Acceso con DNI
                         {% endif %}
+
                     </div>
+
                     <div class="dropdown-divider"></div>
+
                     <div class="dropdown-item logout" onclick="window.location.href='/logout'">
                         🚪 Cerrar Sesión
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </nav>
 
     <!-- CONTENIDO -->
     <div class="dashboard-content">
 
-        <!-- Bienvenida -->
+        <!-- BIENVENIDA -->
         <div class="welcome-banner">
+
             <div>
-                <h2>Bienvenido, {{ user_name }}! 👋</h2>
+                <h2>Bienvenido, {{ user_name }} 👋</h2>
                 <p>¿Qué trámite deseas realizar hoy?</p>
             </div>
+
             <div class="access-badge">
+
                 {% if session.get('face_login') %}
                 👤 Acceso facial
                 {% else %}
                 🔐 Acceso con DNI
                 {% endif %}
+
             </div>
+
         </div>
 
-        <!-- Grid de cards -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Licencia')">
-                <div class="card-icon">🚗</div>
-                <h3>Licencia</h3>
-                <p>Gestión de licencias municipales</p>
+        <!-- INICIO -->
+        <div id="inicioSection">
+
+            <div class="inicio-card">
+
+                <h1 style="font-size:35px;color:#333;">
+                    Plataforma Ciudadana CABOT
+                </h1>
+
+                <p style="margin-top:20px;color:#666;line-height:1.8;">
+                    CABOT es una plataforma digital que permite consultar
+                    información ciudadana relacionada con licencias,
+                    padrones y partidas registrales. Además, permite
+                    programar citas para realizar trámites municipales
+                    de manera rápida y organizada.
+                </p>
+
+                <div class="inicio-grid">
+
+                    <div class="inicio-item">
+                        <img src="{{ url_for('static', filename='images/licencia.png') }}"
+                            style="width:70px;height:70px;">
+                        <h3>Licencias</h3>
+                        <p>Consulta licencias municipales y comerciales.</p>
+                    </div>
+
+                    <div class="inicio-item">
+                        <img src="{{ url_for('static', filename='images/padron.png') }}"
+                            style="width:70px;height:70px;">
+                        <h3>Padrones</h3>
+                        <p>Consulta registros y padrones municipales.</p>
+                    </div>
+
+                    <div class="inicio-item">
+                        <img src="{{ url_for('static', filename='images/partida.png') }}"
+                            style="width:70px;height:70px;">
+                        <h3>Partidas</h3>
+                        <p>Consulta partidas registrales.</p>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Partidas')">
-                <div class="card-icon">📄</div>
-                <h3>Partidas</h3>
-                <p>Partidas de nacimiento, matrimonio</p>
+            <!-- BOTONES -->
+            <div class="inicio-card">
+
+                <h2 style="text-align:center;">
+                    ¿QUÉ TRÁMITE QUIERES REALIZAR HOY?
+                </h2>
+
+                <div class="tramite-buttons">
+
+                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/licencias'">
+                        🚗<br><br>LICENCIAS
+                    </button>
+
+                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/partidas'">
+                        📄<br><br>PARTIDAS
+                    </button>
+
+                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/padrones'">
+                        📋<br><br>PADRONES
+                    </button>
+
+                </div>
+
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Trámites de Padrón')">
-                <div class="card-icon">📋</div>
-                <h3>Padrón</h3>
-                <p>Padrón municipal</p>
+            <!-- ESTADISTICAS -->
+            <div class="stats-container">
+
+                <div class="stat-card">
+                    <div class="stat-number" id="totalLicencias">0</div>
+                    <div>Licencias</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPadrones">0</div>
+                    <div>Padrones</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPartidas">0</div>
+                    <div>Partidas</div>
+                </div>
+
             </div>
 
-            <div class="dashboard-card" onclick="alert('Próximamente: Historial de trámites')">
-                <div class="card-icon">📊</div>
-                <h3>Mis Trámites</h3>
-                <p>Historial y seguimiento</p>
-            </div>
-
-            <div class="dashboard-card" onclick="alert('Próximamente: Citas programadas')">
-                <div class="card-icon">📅</div>
-                <h3>Citas</h3>
-                <p>Citas programadas</p>
-            </div>
-
-            <div class="dashboard-card" onclick="alert('Próximamente: Perfil')">
-                <div class="card-icon">👤</div>
-                <h3>Mi Perfil</h3>
-                <p>Mis datos personales</p>
-            </div>
         </div>
-    </div>
 
-    <script>
-        function logout() {
-            window.location.href = '/logout';
-        }
-    </script>
+        <!-- TABLAS -->
+        <div id="tramitesContent" class="tramites-section">
+
+
+
+            <h3 id="sectionTitle" class="section-title"></h3>
+
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar...">
+
+            <div id="tableContent" class="table-container"></div>
+
+        </div>
+
+        <!-- CITAS -->
+        <div id="citasSection" class="tramites-section">
+
+
+            <h2 class="section-title">
+                📅 Programar Cita
+            </h2>
+
+            <div class="tramite-buttons">
+
+                <button class="btn-tramite" onclick="window.location.href='/formulario/licencias'">
+                    🚗 Licencias
+                </button>
+
+                <button class="btn-tramite" onclick="window.location.href='/formulario/partidas'">
+                    📄 Partidas
+                </button>
+
+                <button class="btn-tramite" onclick="window.location.href='/formulario/padrones'">
+                    📋 Padrones
+                </button>
+
+            </div>
+
+        </div>
+
+        <script src="../static/js/dashboard.js"></script>
+
 </body>
 
 </html>
