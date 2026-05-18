@@ -17,6 +17,23 @@ python app.py
 
 - pip install -r requirements.txt
 - pip install opencv-python opencv-contrib-python face-recognition numpy
+- pip install -r requirements.txt
+
+
+# Instrucciones de ejecución
+
+- Terminal 1 - Convertir CSV a JSON (solo la primera vez):
+```bash
+python data/procesar_datos.py
+```
+- Terminal 1 - Ejecutar la API de datos:
+```bash
+python data_api.py
+```
+Terminal 2 - Ejecutar la app principal:
+```bash
+python app.py
+```
 
 
 # Flujo de Trabajo del Proyecto - GitHub
