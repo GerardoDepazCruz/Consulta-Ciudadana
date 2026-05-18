@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 import os
 import cv2
 import numpy as np
-# import face_recognition  # comentar hasta instalar dlib
+import face_recognition
 import base64
 import json
+from datetime import datetime, timedelta
+import random
 
 # Cargar variables de entorno
 load_dotenv()
@@ -63,6 +65,137 @@ def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('index'))
     return render_template('dashboard.html', user_name=session.get('user_name'))
+
+@app.route('/citas')
+def citas():
+    if 'user_id' not in session:
+        return redirect('/')
+
+    return render_template(
+        'citas.html',
+        user_name=session.get('user_name')
+    )
+
+@app.route('/formulario/licencias')
+def formulario_licencias():
+    return render_template('formulario_licencias.html')
+
+
+@app.route('/formulario/partidas')
+def formulario_partidas():
+    return render_template('formulario_partidas.html')
+
+
+@app.route('/formulario/padrones')
+def formulario_padrones():
+    return render_template('formulario_padrones.html')
+
+
+@app.route('/guardar_cita', methods=['POST'])
+def guardar_cita():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    tipo = request.form.get('tipo')
+
+    fecha_cita = request.form.get('fecha_cita')
+    hora = request.form.get('hora')
+
+    datos = dict(request.form)
+
+    datos_json = json.dumps(datos)
+
+    cursor = mysql.connection.cursor()
+
+    sql_tramite = """
+    INSERT INTO tramites(
+        usuario_id,
+        tipo_tramite,
+        descripcion,
+        estado
+    )
+    VALUES(%s,%s,%s,%s)
+    """
+
+    cursor.execute(sql_tramite, (
+        session['user_id'],
+        tipo,
+        f"Trámite de {tipo}",
+        "PENDIENTE"
+    ))
+
+    tramite_id = cursor.lastrowid
+
+    sql_cita = """
+    INSERT INTO citas(
+        usuario_id,
+        tramite_id,
+        fecha_cita,
+        hora,
+        lugar
+    )
+    VALUES(%s,%s,%s,%s,%s)
+    """
+
+    cursor.execute(sql_cita, (
+        session['user_id'],
+        tramite_id,
+        fecha_cita,
+        hora,
+        "Municipalidad Central"
+    ))
+
+    mysql.connection.commit()
+
+    cursor.close()
+
+    return redirect('/mis_citas')
+
+
+@app.route('/mis_citas')
+def mis_citas():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    cursor = mysql.connection.cursor()
+
+    cursor.execute(
+        "SELECT * FROM citas_licencias WHERE usuario_id=%s",
+        (session['user_id'],)
+    )
+
+    licencias = cursor.fetchall()
+
+    cursor.execute(
+        "SELECT * FROM citas_padrones WHERE usuario_id=%s",
+        (session['user_id'],)
+    )
+
+    padrones = cursor.fetchall()
+
+    cursor.execute(
+        "SELECT * FROM citas_partidas WHERE usuario_id=%s",
+        (session['user_id'],)
+    )
+
+    partidas = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+        'mis_citas.html',
+        licencias=licencias,
+        padrones=padrones,
+        partidas=partidas
+    )
+
+def generar_cita():
+    fecha = datetime.now() + timedelta(days=random.randint(1, 7))
+    fecha_cita = fecha.strftime("%Y-%m-%d")
+    hora_cita = f"{random.randint(8,16)}:00"
+    return fecha_cita, hora_cita
 
 # ============== API ENDPOINTS ==============
 
@@ -328,6 +461,161 @@ def check_session():
     if 'user_id' in session:
         return jsonify({'logged_in': True, 'user_name': session.get('user_name')})
     return jsonify({'logged_in': False})
+
+@app.route('/guardar_licencia', methods=['POST'])
+def guardar_licencia():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    data = request.form
+    cursor = mysql.connection.cursor()
+
+    fecha_cita, hora_cita = generar_cita()
+    lugar = "Municipalidad de Lima"
+
+    sql = """
+    INSERT INTO citas_licencias(
+        usuario_id,
+        tipo_resolucion,
+        expediente,
+        anio_expediente,
+        ruc,
+        area,
+        costo_tramite,
+        departamento,
+        provincia,
+        distrito,
+        ubigeo,
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+
+    valores = (
+        session['user_id'],
+        data['tipo_resolucion'],
+        data['expediente'],
+        data['anio_expediente'],
+        data['ruc'],
+        data['area'],
+        data['costo_tramite'],
+        data['departamento'],
+        data['provincia'],
+        data['distrito'],
+        data['ubigeo'],
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+
+    cursor.execute(sql, valores)
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect('/mis_citas')
+
+
+@app.route('/guardar_padron', methods=['POST'])
+def guardar_padron():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    data = request.form
+    cursor = mysql.connection.cursor()
+
+    fecha_cita, hora_cita = generar_cita()
+    lugar = "Municipalidad de Lima"
+
+    sql = """
+    INSERT INTO citas_padrones(
+        usuario_id,
+        departamento,
+        provincia,
+        distrito,
+        ubigeo,
+        tipo,
+        fecha_solicitud,
+        razon_social,
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+
+    valores = (
+        session['user_id'],
+        data['departamento'],
+        data['provincia'],
+        data['distrito'],
+        data['ubigeo'],
+        data['tipo'],
+        data['fecha_solicitud'],
+        data['razon_social'],
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+
+    cursor.execute(sql, valores)
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect('/mis_citas')
+
+
+@app.route('/guardar_partida', methods=['POST'])
+def guardar_partida():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    data = request.form
+    cursor = mysql.connection.cursor()
+
+    fecha_cita, hora_cita = generar_cita()
+    lugar = "Municipalidad de Chachapoyas"
+
+    sql = """
+    INSERT INTO citas_partidas(
+        usuario_id,
+        anio_inscripcion,
+        mes_inscripcion,
+        depa_cont_l,
+        prov_pais_l,
+        dist_ciud_l,
+        nacional_l,
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+
+    valores = (
+        session['user_id'],
+        data['anio_inscripcion'],
+        data['mes_inscripcion'],
+        data['depa_cont_l'],
+        data['prov_pais_l'],
+        data['dist_ciud_l'],
+        data['nacional_l'],
+        fecha_cita,
+        hora_cita,
+        lugar
+    )
+
+    cursor.execute(sql, valores)
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect('/mis_citas')
+
+
 
 @app.route('/logout')
 def logout():

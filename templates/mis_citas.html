@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Citas</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mis_citas.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <button class="btn-volver" onclick="window.location.href='/dashboard'">
+            ← Volver
+        </button>
+        <h1>📅 MIS CITAS</h1>
+
+        <div class="grid">
+
+            <!-- LICENCIAS -->
+            <div class="card">
+                <h2>🚗 CITAS DE LICENCIAS</h2>
+
+                {% for c in licencias %}
+                <div class="item">
+                    <b>ID:</b> {{ c.id }} <br>
+                    <b>Registrado:</b> {{ c.created_at }} <br>
+                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
+                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
+                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- PARTIDAS -->
+            <div class="card">
+                <h2>📄 CITAS DE PARTIDAS</h2>
+
+                {% for c in partidas %}
+                <div class="item">
+                    <b>ID:</b> {{ c.id }} <br>
+                    <b>Fecha registro:</b> {{ c.created_at }} <br>
+                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
+                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
+                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- PADRONES -->
+            <div class="card">
+                <h2>📋 CITAS DE PADRONES</h2>
+
+                {% for c in padrones %}
+                <div class="item">
+                    <b>ID:</b> {{ c.id }} <br>
+                    <b>Fecha registro:</b> {{ c.created_at }} <br>
+                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
+                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
+                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

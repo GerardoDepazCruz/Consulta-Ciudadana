@@ -1,0 +1,87 @@
+<!-- formulario_partidas.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Formulario Partidas</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_partidas.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <button class="btn-volver" onclick="window.location.href='/dashboard'">
+                ← Volver
+            </button>
+
+            <div class="form-header">
+
+                <h1>📄 Formulario Partidas</h1>
+
+                <p>
+                    Complete los datos para registrar
+                    una solicitud de partidas.
+                </p>
+
+            </div>
+
+            <form action="/guardar_partida" method="POST">
+
+                <div class="form-grid">
+
+                    <div class="input-group">
+                        <label>Año Inscripción</label>
+                        <input type="text" name="anio_inscripcion">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Mes Inscripción</label>
+                        <input type="text" name="mes_inscripcion">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Departamento</label>
+                        <input type="text" name="depa_cont_l">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Provincia</label>
+                        <input type="text" name="prov_pais_l">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Distrito</label>
+                        <input type="text" name="dist_ciud_l">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nacionalidad</label>
+                        <input type="text" name="nacional_l">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-guardar">
+                    Guardar Cita
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
