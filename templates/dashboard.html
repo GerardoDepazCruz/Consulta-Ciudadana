@@ -238,9 +238,10 @@
             </div>
 
         </div>
-
-        <script src="../static/js/dashboard.js"></script>
-
+        
+        <!-- <script src="../static/js/dashboard.js"></script>  -->
+        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 </body>
 
 </html>
