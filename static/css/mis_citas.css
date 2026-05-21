@@ -1,6 +1,7 @@
 body {
     font-family: Arial;
-    background: #f4f6fb;
+    background: url("../images/fondomiscitas.jpg") no-repeat center center fixed;
+    background-size: cover;
     margin: 0;
     padding: 0;
 }
@@ -55,6 +56,40 @@ h1 {
     color: white;
     border-radius: 8px;
     font-size: 12px;
+}
+
+.btn-volver {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-volver:hover {
+    background: #1d4ed8;
+}
+
+.btn-eliminar{
+    margin-top:15px;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d4d;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-eliminar:hover{
+    background:#e60000;
+    transform:scale(1.03);
 }
 
 @media(max-width: 900px) {

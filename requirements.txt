@@ -11,4 +11,4 @@ requests==2.31.0
 flask-socketio==5.3.4
 eventlet==0.33.3
 pandas==2.0.3
-werkzeug==2.3.0
+werkzeug==2.3.7

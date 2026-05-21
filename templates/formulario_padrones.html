@@ -1,5 +1,3 @@
-<!-- formulario_padron.html -->
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -35,7 +33,7 @@
 
             </div>
 
-            <form action="/guardar_padron" method="POST">
+            <form id="formPadron" action="/guardar_padron" method="POST">
 
                 <div class="form-grid">
 
@@ -80,12 +78,42 @@
                     Guardar Cita
                 </button>
 
+                <div id="mensajeGuardandoPadron" style="
+                    display:none;
+                    margin-top:15px;
+                    text-align:center;
+                    color:#667eea;
+                    font-weight:600;
+                    animation:pulse 1s infinite;
+                ">
+                    ⏳ Guardando padrón...
+                </div>
+
             </form>
 
         </div>
 
     </div>
+
     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
+
+    <script>
+
+        const formPadron = document.getElementById('formPadron');
+
+        formPadron.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            document.getElementById('mensajeGuardandoPadron').style.display = 'block';
+
+            setTimeout(() => {
+                formPadron.submit();
+            }, 2000);
+
+        });
+
+    </script>
 
 </body>
 

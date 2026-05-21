@@ -23,7 +23,7 @@
 
         <div class="nav-links">
 
-            <a href="#" class="nav-item active" onclick="mostrarInicio()">
+            <a href="#" class="nav-item" onclick="mostrarInicio()">
                 <img src="{{ url_for('static', filename='images/home.png') }}" style="width:40px;height:35px;">
                 <span class="nav-label">Inicio</span>
             </a>
@@ -51,37 +51,12 @@
         </div>
 
         <div class="nav-right">
-
-            <div class="nav-profile">
-
+            <div class="nav-profile" onclick="window.location.href='/perfil'" style="cursor:pointer;">
                 <div class="profile-avatar">
                     <img src="{{ url_for('static', filename='images/perfil.png') }}" style="width:45px;height:40px;">
                 </div>
-
                 <span class="profile-name">{{ user_name }}</span>
-
-                <div class="profile-dropdown">
-
-                    <div class="dropdown-item">
-
-                        {% if session.get('face_login') %}
-                        👤 Acceso facial
-                        {% else %}
-                        🔐 Acceso con DNI
-                        {% endif %}
-
-                    </div>
-
-                    <div class="dropdown-divider"></div>
-
-                    <div class="dropdown-item logout" onclick="window.location.href='/logout'">
-                        🚪 Cerrar Sesión
-                    </div>
-
-                </div>
-
             </div>
-
         </div>
 
     </nav>
@@ -209,36 +184,85 @@
 
             <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar...">
 
-            <div id="tableContent" class="table-container"></div>
+            <div id="tableContent" class="table-container">
+
+                <div id="loadingMessage" style="
+                    display:none;
+                    text-align:center;
+                    padding:30px;
+                    font-size:18px;
+                    color:#667eea;
+                    font-weight:600;
+                    animation:pulse 1s infinite;
+                ">
+                    ⏳ Cargando datos de Licencias, Padrones y Partidas...
+                </div>
+
+            </div>
 
         </div>
 
         <!-- CITAS -->
         <div id="citasSection" class="tramites-section">
 
-
             <h2 class="section-title">
                 📅 Programar Cita
             </h2>
 
+            <p class="section-description">
+                Realiza tus trámites de manera rápida, segura y organizada desde nuestra plataforma digital.
+                Programa tu cita seleccionando el tipo de trámite que deseas gestionar y evita largas colas
+                o demoras innecesarias.
+            </p>
+
+            <div class="citas-banner">
+                <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Citas" class="banner-img">
+
+                <div class="banner-text">
+                    <h3>Atención Ciudadana Inteligente</h3>
+                    <p>
+                        Nuestro sistema permite gestionar citas para licencias, partidas y padrones
+                        de forma eficiente, brindando una mejor experiencia para todos los ciudadanos.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-citas">
+                <div class="info-card">
+                    ✔ Atención rápida
+                </div>
+
+                <div class="info-card">
+                    ✔ Reserva online
+                </div>
+
+                <div class="info-card">
+                    ✔ Trámites seguros
+                </div>
+
+                <div class="info-card">
+                    ✔ Sistema organizado
+                </div>
+            </div>
+
             <div class="tramite-buttons">
 
-                <button class="btn-tramite" onclick="window.location.href='/formulario/licencias'">
-                    🚗 Licencias
+                <button class="btn-tramite grande" onclick="window.location.href='/formulario/licencias'">
+                    🚗 <br> Licencias
                 </button>
 
-                <button class="btn-tramite" onclick="window.location.href='/formulario/partidas'">
-                    📄 Partidas
+                <button class="btn-tramite grande" onclick="window.location.href='/formulario/partidas'">
+                    📄 <br> Partidas
                 </button>
 
-                <button class="btn-tramite" onclick="window.location.href='/formulario/padrones'">
-                    📋 Padrones
+                <button class="btn-tramite grande" onclick="window.location.href='/formulario/padrones'">
+                    📋 <br> Padrones
                 </button>
 
             </div>
 
         </div>
-        
+
         <!-- <script src="../static/js/dashboard.js"></script>  -->
         <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
         <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>

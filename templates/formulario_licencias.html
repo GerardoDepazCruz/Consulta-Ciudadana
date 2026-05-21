@@ -36,7 +36,7 @@
             </div>
 
             <!-- FORM -->
-            <form action="/guardar_licencia" method="POST">
+            <form id="formLicencia" action="/guardar_licencia" method="POST">
 
                 <div class="form-grid">
 
@@ -96,12 +96,43 @@
                     Guardar Cita
                 </button>
 
+                <!-- MENSAJE -->
+                <div id="mensajeGuardando" style="
+                    display:none;
+                    margin-top:15px;
+                    text-align:center;
+                    color:#667eea;
+                    font-weight:600;
+                    animation:pulse 1s infinite;
+                ">
+                    ⏳ Guardando licencia...
+                </div>
+
             </form>
 
         </div>
 
     </div>
+
     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
+
+    <script>
+
+        const formLicencia = document.getElementById('formLicencia');
+
+        formLicencia.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            document.getElementById('mensajeGuardando').style.display = 'block';
+
+            setTimeout(() => {
+                formLicencia.submit();
+            }, 2000);
+
+        });
+
+    </script>
 
 </body>
 

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+</head>
+
+<body>
+
+    <div class="profile-page">
+
+        <div class="profile-card">
+
+            <button class="btn-volver" onclick="window.location.href='/dashboard'">
+                ← Volver
+            </button>
+
+            <!-- FOTO PERFIL -->
+            <form id="formAvatar" action="/perfil/avatar" method="POST" enctype="multipart/form-data">
+
+                <div class="profile-image">
+
+                    <img id="avatarPreview" src="{{ avatar_url }}" alt="Perfil">
+
+                    <label class="avatar-edit">
+                        Cambiar foto
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*">
+                    </label>
+
+                </div>
+
+                <button type="submit" class="btn-save-avatar">
+                    Guardar foto
+                </button>
+
+                <!-- MENSAJE FOTO -->
+                <div id="mensajeGuardandoFoto" style="
+                    display:none;
+                    margin-top:15px;
+                    text-align:center;
+                    color:#667eea;
+                    font-weight:600;
+                    animation:pulse 1s infinite;
+                ">
+                    ⏳ Guardando foto de perfil...
+                </div>
+
+            </form>
+
+            <h2>{{ user.nombres }} {{ user.apellidos }}</h2>
+
+            <!-- FORMULARIO PERFIL -->
+            <form id="formPerfil" action="/actualizar_perfil" method="POST">
+
+                <div class="profile-field">
+                    <label>Nombres</label>
+
+                    <input type="text" id="nombres" name="nombres" value="{{ user.nombres }}" maxlength="30" required>
+                </div>
+
+                <div class="profile-field">
+                    <label>Apellidos</label>
+
+                    <input type="text" id="apellidos" name="apellidos" value="{{ user.apellidos }}" maxlength="30"
+                        required>
+                </div>
+
+                <div class="profile-field">
+                    <label>Teléfono</label>
+
+                    <input type="text" id="celular" name="celular" value="{{ user.celular }}" maxlength="9" required>
+                </div>
+
+                <div class="profile-field">
+                    <label>Email</label>
+
+                    <input type="email" id="correo" name="correo" value="{{ user.correo }}" required>
+                </div>
+
+                <div class="profile-field">
+                    <label>DNI</label>
+
+                    <input type="text" id="dni" name="dni" value="{{ user.dni }}" maxlength="8" required>
+                </div>
+
+                <button type="submit" class="btn-save-avatar">
+                    Guardar cambios
+                </button>
+
+                <!-- MENSAJE PERFIL -->
+                <div id="mensajePerfil" style="
+                    display:none;
+                    margin-top:15px;
+                    text-align:center;
+                    color:#667eea;
+                    font-weight:600;
+                    animation:pulse 1s infinite;
+                ">
+                    ⏳ Guardando cambios...
+                </div>
+
+            </form>
+
+            <button class="btn-logout" onclick="window.location.href='/logout'">
+                CERRAR SESIÓN
+            </button>
+
+            <button class="btn-help">
+                ¿Necesitas ayuda?
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+
+    <script>
+
+        // GUARDAR FOTO
+        const formAvatar = document.getElementById('formAvatar');
+
+        formAvatar.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            document.getElementById('mensajeGuardandoFoto').style.display = 'block';
+
+            setTimeout(() => {
+                formAvatar.submit();
+            }, 2000);
+
+        });
+
+        // GUARDAR PERFIL
+        const formPerfil = document.getElementById('formPerfil');
+
+        formPerfil.addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            const nombres = document.getElementById('nombres').value.trim();
+            const apellidos = document.getElementById('apellidos').value.trim();
+            const celular = document.getElementById('celular').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const dni = document.getElementById('dni').value.trim();
+
+            // VALIDAR NOMBRES
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombres)) {
+
+                alert('❌ El nombre no puede contener números');
+
+                return;
+            }
+
+            // VALIDAR APELLIDOS
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) {
+
+                alert('❌ El apellido no puede contener números');
+
+                return;
+            }
+
+            // VALIDAR MAXIMO 30
+            if (nombres.length > 30 || apellidos.length > 30) {
+
+                alert('❌ Nombre y apellido máximo 30 caracteres');
+
+                return;
+            }
+
+            // VALIDAR CELULAR
+            if (!/^\d{9}$/.test(celular)) {
+
+                alert('❌ El celular debe tener 9 dígitos');
+
+                return;
+            }
+
+            // VALIDAR DNI
+            if (!/^\d{8}$/.test(dni)) {
+
+                alert('❌ El DNI debe tener 8 dígitos');
+
+                return;
+            }
+
+            // VALIDAR EMAIL
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+
+                alert('❌ Correo electrónico inválido');
+
+                return;
+            }
+
+            // MENSAJE GUARDANDO
+            document.getElementById('mensajePerfil').style.display = 'block';
+
+            setTimeout(() => {
+
+                formPerfil.submit();
+
+            }, 2000);
+
+        });
+
+    </script>
+
+</body>
+
+</html>

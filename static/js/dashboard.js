@@ -63,6 +63,20 @@ async function mostrarTramites(tipo) {
 
     document.getElementById('sectionTitle').textContent = titulos[tipo];
 
+    // MOSTRAR CARGANDO
+    document.getElementById('tableContent').innerHTML = `
+        <div style="
+            text-align:center;
+            padding:30px;
+            font-size:18px;
+            color:#667eea;
+            font-weight:600;
+            animation:pulse 1s infinite;
+        ">
+            ⏳ Cargando datos de Licencias, Padrones y Partidas...
+        </div>
+    `;
+
     try {
 
         const response = await fetch(`${API_URL}/${tipo}`);
@@ -75,7 +89,9 @@ async function mostrarTramites(tipo) {
 
             totalPaginas = Math.ceil(datosActuales.length / filasPorPagina);
 
-            mostrarTabla();
+            setTimeout(() => {
+                mostrarTabla();
+            }, 2000);
 
         }
 

@@ -25,12 +25,23 @@
 
                 {% for c in licencias %}
                 <div class="item">
+
                     <b>ID:</b> {{ c.id }} <br>
                     <b>Registrado:</b> {{ c.created_at }} <br>
                     <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
                     <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
                     <b>📍 Lugar:</b> {{ c.lugar }} <br>
+
                     <span class="badge">{{ c.estado }}</span>
+
+                    <form action="/eliminar_cita/licencia/{{ c.id }}" method="POST">
+
+                        <button type="submit" class="btn-eliminar">
+                            🗑 Eliminar cita
+                        </button>
+
+                    </form>
+
                 </div>
                 {% endfor %}
 
@@ -48,6 +59,13 @@
                     <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
                     <b>📍 Lugar:</b> {{ c.lugar }} <br>
                     <span class="badge">{{ c.estado }}</span>
+                    <form action="/eliminar_cita/partida/{{ c.id }}" method="POST">
+
+                        <button type="submit" class="btn-eliminar">
+                            🗑 Eliminar cita
+                        </button>
+
+                    </form>
                 </div>
                 {% endfor %}
 
@@ -65,6 +83,13 @@
                     <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
                     <b>📍 Lugar:</b> {{ c.lugar }} <br>
                     <span class="badge">{{ c.estado }}</span>
+                    <form action="/eliminar_cita/padron/{{ c.id }}" method="POST">
+
+                        <button type="submit" class="btn-eliminar">
+                            🗑 Eliminar cita
+                        </button>
+
+                    </form>
                 </div>
                 {% endfor %}
 
