@@ -3,6 +3,13 @@ import hashlib
 import base64
 import json
 
+def get_user_by_id(user_id, mysql):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM usuarios WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    return user
+
 class UserModel:
     def __init__(self, mysql):
         self.mysql = mysql

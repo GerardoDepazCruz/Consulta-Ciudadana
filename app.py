@@ -10,6 +10,11 @@ import base64
 import json
 from datetime import datetime, timedelta
 import random
+from models.user_model import get_user_by_id
+
+import os
+from werkzeug.utils import secure_filename
+from flask import request, redirect, url_for, flash
 
 # Cargar variables de entorno
 load_dotenv()
@@ -198,6 +203,52 @@ def generar_cita():
     return fecha_cita, hora_cita
 
 # ============== API ENDPOINTS ==============
+@app.route('/perfil')
+def perfil():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    user = get_user_by_id(session['user_id'], mysql)
+
+    if user and user.get('avatar'):
+        user['avatar_url'] = url_for('static', filename=user['avatar'])
+    else:
+        user['avatar_url'] = url_for('static', filename='images/perfil.png')
+
+    return render_template('perfil.html', user=user, avatar_url=user['avatar_url'])
+
+
+@app.route('/perfil/avatar', methods=['POST'])
+def perfil_avatar():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    if 'avatar' not in request.files:
+        return redirect('/perfil')
+
+    file = request.files['avatar']
+    if file.filename == '':
+        return redirect('/perfil')
+
+    filename = secure_filename(file.filename)
+    upload_folder = os.path.join(app.root_path, 'static', 'uploads', 'avatars')
+    os.makedirs(upload_folder, exist_ok=True)
+
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+
+    update_user_avatar(session['user_id'], f'uploads/avatars/{filename}', mysql)
+
+    return redirect('/perfil')
+
+def update_user_avatar(user_id, avatar_path, mysql):
+    cursor = mysql.connection.cursor()
+    cursor.execute(
+        "UPDATE usuarios SET avatar = %s WHERE id = %s",
+        (avatar_path, user_id)
+    )
+    mysql.connection.commit()
+    cursor.close()
 
 @app.route('/api/register', methods=['POST'])
 def api_register():

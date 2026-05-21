@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+</head>
+
+<body>
+    <div class="profile-page">
+        <div class="profile-card">
+            <button class="btn-volver" onclick="window.location.href='/dashboard'">
+                ← Volver
+            </button>
+            <form action="/perfil/avatar" method="POST" enctype="multipart/form-data">
+                <div class="profile-image">
+                    <img id="avatarPreview" src="{{ avatar_url }}" alt="Perfil">
+                    <label class="avatar-edit">
+                        Cambiar foto
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*">
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-save-avatar">Guardar foto</button>
+            </form>
+
+            <h2>{{ user.nombres }} {{ user.apellidos }}</h2>
+
+            <div class="profile-field">
+                <label>Nombres completos</label>
+                <input type="text" value="{{ user.nombres }} {{ user.apellidos }}" readonly>
+            </div>
+
+            <div class="profile-field">
+                <label>Teléfono</label>
+                <input type="text" value="{{ user.celular }}" readonly>
+            </div>
+
+            <div class="profile-field">
+                <label>Email</label>
+                <input type="text" value="{{ user.correo }}" readonly>
+            </div>
+
+            <div class="profile-field">
+                <label>DNI</label>
+                <input type="text" value="{{ user.dni }}" readonly>
+            </div>
+
+            <button class="btn-logout" onclick="window.location.href='/logout'">CERRAR SESIÓN</button>
+
+            <button class="btn-help">¿Necesitas ayuda?</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+</body>
+
+</html>
