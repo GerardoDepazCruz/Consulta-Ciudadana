@@ -13,12 +13,31 @@ venv\Scripts\activate
 python app.py
 ```
 
-### Si es que les pide importaciones
+### Si es que les pide importaciones (Algunas por si no lee los requerimientos)
 
 - pip install -r requirements.txt
 - pip install opencv-python opencv-contrib-python face-recognition numpy
 - pip install -r requirements.txt
+- python -m pip install google-generativeai
+- pip install pandas
 
+# Al traer los cambios de main a nuestra rama el venv tiene oonflicto, seguir este flujo si sale error en el venv:
+
+```bash
+deactivate
+```
+```bash
+Remove-Item -Recurse -Force venv
+```
+```bash
+py -3.11 -m venv venv
+```
+```bash
+venv\Scripts\activate
+```
+```bash
+python -m pip install -r requirements.txt
+```
 
 # Instrucciones de ejecución
 
