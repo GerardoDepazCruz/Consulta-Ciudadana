@@ -623,5 +623,99 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+# ============== CABOT BOT ==============
+
+import google.generativeai as genai
+
+# Configurar Gemini
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+@app.route('/api/cabot', methods=['POST'])
+def api_cabot():
+    """Endpoint del bot Cabot con IA Gemini"""
+    try:
+        data = request.json
+        mensaje = data.get('mensaje', '')
+        historial = data.get('historial', [])
+
+        if not mensaje:
+            return jsonify({'success': False, 'message': 'Mensaje vacío'})
+
+        # Sistema de contexto para Cabot
+        system_prompt = """Eres CABOT, el asistente virtual de la Plataforma Ciudadana de trámites municipales del Perú.
+
+Tu función es ayudar a los ciudadanos con:
+1. LICENCIAS MUNICIPALES: Licencias de funcionamiento, comerciales, construcción.
+2. PADRONES MUNICIPALES: Registros y padrones de contribuyentes, predios, empresas.
+3. PARTIDAS REGISTRALES: Partidas de nacimiento, matrimonio, defunción.
+4. CITAS: Agendar citas para realizar trámites presencialmente.
+
+Comandos de navegación que DEBES incluir en tu respuesta cuando corresponda:
+- Si el usuario quiere ir a Licencias: incluye exactamente [NAV:licencias]
+- Si el usuario quiere ir a Padrones: incluye exactamente [NAV:padrones]  
+- Si el usuario quiere ir a Partidas: incluye exactamente [NAV:partidas]
+- Si el usuario quiere ir a Citas: incluye exactamente [NAV:citas]
+- Si el usuario quiere ir al Inicio: incluye exactamente [NAV:inicio]
+
+REGLAS:
+- Responde siempre en español, de forma amable y clara.
+- Sé conciso, máximo 3-4 oraciones.
+- Si el usuario pregunta por requisitos de un trámite, explícalos brevemente.
+- Si el usuario quiere realizar un trámite, navégalo a la sección correcta.
+- No inventes información legal específica que no sepas.
+- Saluda con "¡Hola! Soy CABOT" solo en el primer mensaje.
+
+Información útil:
+- Horario de atención: Lunes a Viernes 8:00 AM - 5:00 PM
+- Los trámites se pueden iniciar en línea y luego confirmar presencialmente.
+- Las citas se asignan automáticamente en un rango de 1-7 días hábiles."""
+
+        # Construir historial para Gemini
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        
+        # Preparar mensajes con historial
+        chat_history = []
+        for msg in historial[-6:]:  # Últimos 6 mensajes para contexto
+            role = 'user' if msg['role'] == 'user' else 'model'
+            chat_history.append({'role': role, 'parts': [msg['content']]})
+
+        chat = model.start_chat(history=chat_history)
+
+        # Siempre incluir contexto del sistema
+        prompt_final = f"{system_prompt}\n\nMensaje del ciudadano: {mensaje}"
+
+        response = chat.send_message(prompt_final)
+        respuesta = response.text
+
+        # Detectar comandos de navegación
+        navegacion = None
+        nav_commands = {
+            '[NAV:licencias]': 'licencias',
+            '[NAV:padrones]': 'padrones',
+            '[NAV:partidas]': 'partidas',
+            '[NAV:citas]': 'citas',
+            '[NAV:inicio]': 'inicio'
+        }
+        
+        for cmd, dest in nav_commands.items():
+            if cmd in respuesta:
+                navegacion = dest
+                respuesta = respuesta.replace(cmd, '').strip()
+
+        return jsonify({
+            'success': True,
+            'respuesta': respuesta,
+            'navegacion': navegacion
+        })
+
+    except Exception as e:
+        print(f"Error en Cabot: {e}")
+        return jsonify({
+            'success': False,
+            'respuesta': 'Lo siento, tuve un problema al procesar tu consulta. Intenta de nuevo.',
+            'navegacion': None
+        })
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
