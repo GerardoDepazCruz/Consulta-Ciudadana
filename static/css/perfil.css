@@ -152,3 +152,17 @@ body{
     transform: translateY(0);
     box-shadow: 0 6px 14px rgba(47, 111, 184, 0.24);
 }
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}

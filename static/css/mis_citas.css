@@ -74,6 +74,24 @@ h1 {
     background: #1d4ed8;
 }
 
+.btn-eliminar{
+    margin-top:15px;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d4d;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-eliminar:hover{
+    background:#e60000;
+    transform:scale(1.03);
+}
+
 @media(max-width: 900px) {
     .grid {
         grid-template-columns: 1fr;

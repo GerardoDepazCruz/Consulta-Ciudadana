@@ -1,3 +1,5 @@
+import google.generativeai as genai
+from models.user_model import UserModel
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_mysqldb import MySQL
 from flask_cors import CORS
@@ -35,41 +37,47 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # Importar modelo después de configurar mysql
-from models.user_model import UserModel
 user_model = UserModel(mysql)
 
 # ============== RUTAS PRINCIPALES ==============
+
 
 @app.route('/')
 def index():
     """Página de bienvenida"""
     return render_template('index.html')
 
+
 @app.route('/login')
 def login():
     """Página de login tradicional"""
     return render_template('login.html')
+
 
 @app.route('/register')
 def register():
     """Página de registro tradicional"""
     return render_template('register.html')
 
+
 @app.route('/face_register')
 def face_register():
     """Página de registro facial"""
     return render_template('face_register.html')
+
 
 @app.route('/face_login_page')
 def face_login_page():
     """Página para login con reconocimiento facial"""
     return render_template('face_login.html')
 
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('index'))
     return render_template('dashboard.html', user_name=session.get('user_name'))
+
 
 @app.route('/citas')
 def citas():
@@ -80,6 +88,7 @@ def citas():
         'citas.html',
         user_name=session.get('user_name')
     )
+
 
 @app.route('/formulario/licencias')
 def formulario_licencias():
@@ -196,13 +205,16 @@ def mis_citas():
         partidas=partidas
     )
 
+
 def generar_cita():
     fecha = datetime.now() + timedelta(days=random.randint(1, 7))
     fecha_cita = fecha.strftime("%Y-%m-%d")
-    hora_cita = f"{random.randint(8,16)}:00"
+    hora_cita = f"{random.randint(8, 16)}:00"
     return fecha_cita, hora_cita
 
 # ============== API ENDPOINTS ==============
+
+
 @app.route('/perfil')
 def perfil():
     if 'user_id' not in session:
@@ -237,9 +249,11 @@ def perfil_avatar():
     file_path = os.path.join(upload_folder, filename)
     file.save(file_path)
 
-    update_user_avatar(session['user_id'], f'uploads/avatars/{filename}', mysql)
+    update_user_avatar(session['user_id'],
+                       f'uploads/avatars/{filename}', mysql)
 
     return redirect('/perfil')
+
 
 def update_user_avatar(user_id, avatar_path, mysql):
     cursor = mysql.connection.cursor()
@@ -249,6 +263,7 @@ def update_user_avatar(user_id, avatar_path, mysql):
     )
     mysql.connection.commit()
     cursor.close()
+
 
 @app.route('/api/register', methods=['POST'])
 def api_register():
@@ -261,31 +276,33 @@ def api_register():
         celular = data.get('celular')
         correo = data.get('correo')
         password = data.get('password')
-        
+
         # Validaciones
         if not all([nombres, apellidos, dni, celular, correo, password]):
             return jsonify({'success': False, 'message': 'Todos los campos son requeridos'})
-        
+
         if len(dni) != 8 or not dni.isdigit():
             return jsonify({'success': False, 'message': 'DNI debe tener 8 dígitos'})
-        
+
         if len(celular) != 9 or not celular.isdigit():
             return jsonify({'success': False, 'message': 'Celular debe tener 9 dígitos'})
-        
+
         # Verificar si ya existe
         if user_model.check_user_exists(dni, correo):
             return jsonify({'success': False, 'message': 'El DNI o correo ya está registrado'})
-        
+
         # Registrar usuario
-        success, message = user_model.register_user(nombres, apellidos, dni, celular, correo, password)
-        
+        success, message = user_model.register_user(
+            nombres, apellidos, dni, celular, correo, password)
+
         if success:
             return jsonify({'success': True, 'message': message})
         else:
             return jsonify({'success': False, 'message': message})
-            
+
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -294,18 +311,18 @@ def api_login():
         data = request.json
         dni = data.get('dni')
         password = data.get('password')
-        
+
         if not dni or not password:
             return jsonify({'success': False, 'message': 'DNI y contraseña son requeridos'})
-        
+
         success, user_data = user_model.login_user(dni, password)
-        
+
         if success:
             session['user_id'] = user_data['id']
             session['user_name'] = f"{user_data['nombres']} {user_data['apellidos']}"
             session['user_dni'] = user_data['dni']
             session['face_login'] = False  # Indicar que fue login tradicional
-            
+
             return jsonify({
                 'success': True,
                 'message': 'Login exitoso',
@@ -313,9 +330,10 @@ def api_login():
             })
         else:
             return jsonify({'success': False, 'message': user_data})
-            
+
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
 
 @app.route('/api/register_facial', methods=['POST'])
 def api_register_facial():
@@ -329,45 +347,48 @@ def api_register_facial():
         celular = data.get('celular')
         correo = data.get('correo')
         password = data.get('password')
-        
+
         # Decodificar imagen base64
         if ',' in image_data:
             image_data = image_data.split(',')[1]
-        
+
         image_bytes = base64.b64decode(image_data)
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+
         # Detectar rostro y obtener codificación
         rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face_locations = face_recognition.face_locations(rgb_img)
-        
+
         if len(face_locations) == 0:
             return jsonify({'success': False, 'message': 'No se detectó ningún rostro'})
         elif len(face_locations) > 1:
             return jsonify({'success': False, 'message': 'Se detectaron múltiples rostros'})
-        
+
         # Obtener codificación facial
-        face_encodings = face_recognition.face_encodings(rgb_img, face_locations)
+        face_encodings = face_recognition.face_encodings(
+            rgb_img, face_locations)
         if len(face_encodings) == 0:
             return jsonify({'success': False, 'message': 'No se pudo procesar el rostro'})
-        
+
         facial_encoding = face_encodings[0].tolist()
-        
+
         # Verificar si ya existe
         if user_model.check_user_exists(dni, correo):
             return jsonify({'success': False, 'message': 'El DNI o correo ya está registrado'})
-        
+
         # Registrar usuario con datos faciales
-        success, message = user_model.register_user(nombres, apellidos, dni, celular, correo, password, facial_encoding)
-        
+        success, message = user_model.register_user(
+            nombres, apellidos, dni, celular, correo, password, facial_encoding)
+
         if success:
             return jsonify({'success': True, 'message': 'Registro facial exitoso. Ahora puedes iniciar sesión con tu rostro.'})
         else:
             return jsonify({'success': False, 'message': message})
-            
+
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
 
 @app.route('/api/verify_face_only', methods=['POST'])
 def api_verify_face_only():
@@ -375,67 +396,72 @@ def api_verify_face_only():
     try:
         data = request.json
         image_data = data.get('image')
-        
+
         # Decodificar imagen
         if ',' in image_data:
             image_data = image_data.split(',')[1]
-        
+
         image_bytes = base64.b64decode(image_data)
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+
         # Procesar rostro
         rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face_locations = face_recognition.face_locations(rgb_img)
-        
+
         if len(face_locations) == 0:
             return jsonify({'success': False, 'message': 'No se detectó ningún rostro'})
         elif len(face_locations) > 1:
             return jsonify({'success': False, 'message': 'Se detectaron múltiples rostros. Asegúrate de que solo aparezca tu rostro.'})
-        
+
         # Obtener codificación del rostro capturado
-        face_encodings = face_recognition.face_encodings(rgb_img, face_locations)
+        face_encodings = face_recognition.face_encodings(
+            rgb_img, face_locations)
         if len(face_encodings) == 0:
             return jsonify({'success': False, 'message': 'No se pudo procesar el rostro. Intenta de nuevo.'})
-        
+
         current_face_encoding = face_encodings[0]
-        
+
         # Buscar en todos los usuarios registrados con datos faciales
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombres, apellidos, dni, facial_data FROM usuarios WHERE facial_data IS NOT NULL")
+        cur.execute(
+            "SELECT id, nombres, apellidos, dni, facial_data FROM usuarios WHERE facial_data IS NOT NULL")
         users = cur.fetchall()
         cur.close()
-        
+
         if not users:
             return jsonify({'success': False, 'message': 'No hay usuarios registrados con reconocimiento facial. Debes registrarte primero.'})
-        
+
         # Comparar con cada usuario
         best_match = None
         best_distance = 0.5  # Umbral más estricto para mayor seguridad
-        
+
         for user in users:
             if user['facial_data']:
                 try:
                     stored_encoding = np.array(json.loads(user['facial_data']))
                     # Calcular distancia entre rostros
-                    distance = face_recognition.face_distance([stored_encoding], current_face_encoding)[0]
-                    
-                    print(f"Comparando con usuario {user['dni']} - Distancia: {distance}")  # Debug
-                    
+                    distance = face_recognition.face_distance(
+                        [stored_encoding], current_face_encoding)[0]
+
+                    # Debug
+                    print(
+                        f"Comparando con usuario {user['dni']} - Distancia: {distance}")
+
                     if distance < best_distance:
                         best_distance = distance
                         best_match = user
                 except Exception as e:
                     print(f"Error procesando usuario {user['id']}: {e}")
                     continue
-        
+
         if best_match and best_distance < 0.5:
             # Login exitoso
             session['user_id'] = best_match['id']
             session['user_name'] = f"{best_match['nombres']} {best_match['apellidos']}"
             session['user_dni'] = best_match['dni']
             session['face_login'] = True  # Indicar que fue login facial
-            
+
             return jsonify({
                 'success': True,
                 'message': f'✅ Bienvenido {best_match["nombres"]}! Reconocimiento facial exitoso.',
@@ -448,10 +474,11 @@ def api_verify_face_only():
             })
         else:
             return jsonify({'success': False, 'message': '❌ Rostro no reconocido. Asegúrate de haberte registrado con reconocimiento facial.'})
-            
+
     except Exception as e:
         print(f"Error en verify_face_only: {e}")
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
 
 @app.route('/api/check_face_registered', methods=['POST'])
 def api_check_face_registered():
@@ -459,52 +486,56 @@ def api_check_face_registered():
     try:
         data = request.json
         image_data = data.get('image')
-        
+
         # Decodificar imagen
         if ',' in image_data:
             image_data = image_data.split(',')[1]
-        
+
         image_bytes = base64.b64decode(image_data)
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+
         # Procesar rostro
         rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face_locations = face_recognition.face_locations(rgb_img)
-        
+
         if len(face_locations) == 0:
             return jsonify({'success': False, 'message': 'No se detectó ningún rostro'})
-        
-        face_encodings = face_recognition.face_encodings(rgb_img, face_locations)
+
+        face_encodings = face_recognition.face_encodings(
+            rgb_img, face_locations)
         if len(face_encodings) == 0:
             return jsonify({'success': False, 'message': 'No se pudo procesar el rostro'})
-        
+
         current_face_encoding = face_encodings[0]
-        
+
         # Verificar si ya existe este rostro en la BD
         cur = mysql.connection.cursor()
-        cur.execute("SELECT id, nombres, apellidos, dni, facial_data FROM usuarios WHERE facial_data IS NOT NULL")
+        cur.execute(
+            "SELECT id, nombres, apellidos, dni, facial_data FROM usuarios WHERE facial_data IS NOT NULL")
         users = cur.fetchall()
         cur.close()
-        
+
         for user in users:
             if user['facial_data']:
                 stored_encoding = np.array(json.loads(user['facial_data']))
-                distance = face_recognition.face_distance([stored_encoding], current_face_encoding)[0]
-                
+                distance = face_recognition.face_distance(
+                    [stored_encoding], current_face_encoding)[0]
+
                 if distance < 0.5:  # Mismo umbral
                     return jsonify({
-                        'success': False, 
+                        'success': False,
                         'message': f'⚠️ Este rostro ya está registrado con el DNI {user["dni"]}. Por favor, inicia sesión con tu rostro.'
                     })
-        
+
         # Guardar temporalmente la codificación facial en la sesión para usarla en el registro
         session['temp_facial_encoding'] = current_face_encoding.tolist()
-        
+
         return jsonify({'success': True, 'message': 'Rostro válido. Puedes proceder con el registro.'})
-        
+
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
 
 @app.route('/api/check_session')
 def check_session():
@@ -512,6 +543,7 @@ def check_session():
     if 'user_id' in session:
         return jsonify({'logged_in': True, 'user_name': session.get('user_name')})
     return jsonify({'logged_in': False})
+
 
 @app.route('/guardar_licencia', methods=['POST'])
 def guardar_licencia():
@@ -619,6 +651,71 @@ def guardar_padron():
     return redirect('/mis_citas')
 
 
+@app.route('/actualizar_perfil', methods=['POST'])
+def actualizar_perfil():
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    nombres = request.form['nombres']
+    apellidos = request.form['apellidos']
+    celular = request.form['celular']
+    correo = request.form['correo']
+    dni = request.form['dni']
+
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+        UPDATE usuarios
+        SET nombres=%s,
+            apellidos=%s,
+            celular=%s,
+            correo=%s,
+            dni=%s
+        WHERE id=%s
+    """, (nombres, apellidos, celular, correo, dni, session['user_id']))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect('/perfil')
+
+
+@app.route('/eliminar_cita/<tipo>/<int:id>', methods=['POST'])
+def eliminar_cita(tipo, id):
+
+    if 'user_id' not in session:
+        return redirect('/')
+
+    cursor = mysql.connection.cursor()
+
+    if tipo == 'licencia':
+
+        cursor.execute(
+            "DELETE FROM citas_licencias WHERE id=%s",
+            (id,)
+        )
+
+    elif tipo == 'partida':
+
+        cursor.execute(
+            "DELETE FROM citas_partidas WHERE id=%s",
+            (id,)
+        )
+
+    elif tipo == 'padron':
+
+        cursor.execute(
+            "DELETE FROM citas_padrones WHERE id=%s",
+            (id,)
+        )
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return redirect('/mis_citas')
+
+
 @app.route('/guardar_partida', methods=['POST'])
 def guardar_partida():
 
@@ -667,7 +764,6 @@ def guardar_partida():
     return redirect('/mis_citas')
 
 
-
 @app.route('/logout')
 def logout():
     """Cerrar sesión"""
@@ -676,10 +772,10 @@ def logout():
 
 # ============== CABOT BOT ==============
 
-import google.generativeai as genai
 
 # Configurar Gemini
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
 
 @app.route('/api/cabot', methods=['POST'])
 def api_cabot():
@@ -723,7 +819,7 @@ Información útil:
 
         # Construir historial para Gemini
         model = genai.GenerativeModel('gemini-2.5-flash')
-        
+
         # Preparar mensajes con historial
         chat_history = []
         for msg in historial[-6:]:  # Últimos 6 mensajes para contexto
@@ -747,7 +843,7 @@ Información útil:
             '[NAV:citas]': 'citas',
             '[NAV:inicio]': 'inicio'
         }
-        
+
         for cmd, dest in nav_commands.items():
             if cmd in respuesta:
                 navegacion = dest

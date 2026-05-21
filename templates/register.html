@@ -18,12 +18,12 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nombres">Nombres</label>
-                        <input type="text" id="nombres" name="nombres" placeholder="Juan Carlos" required>
+                        <input type="text" id="nombres" name="nombres" maxlength="30" placeholder="Juan Carlos" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="apellidos">Apellidos</label>
-                        <input type="text" id="apellidos" name="apellidos" placeholder="Pérez Gómez" required>
+                        <input type="text" id="apellidos" name="apellidos" maxlength="30" placeholder="Pérez Gómez" required>
                     </div>
                 </div>
                 
@@ -83,6 +83,18 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
             
+            // Validar nombres
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombres)) {
+                messageDiv.innerHTML = '<div class="error">❌ El nombre no puede contener números</div>';
+                return;
+            }
+
+            // Validar apellidos
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) {
+                messageDiv.innerHTML = '<div class="error">❌ El apellido no puede contener números</div>';
+                return;
+            }
+
             // Validaciones
             if (password !== confirmPassword) {
                 messageDiv.innerHTML = '<div class="error">❌ Las contraseñas no coinciden</div>';

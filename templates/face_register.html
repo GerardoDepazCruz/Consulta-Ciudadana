@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,30 +17,31 @@
             overflow: hidden;
             background: #000;
         }
-        
-        video, #canvas {
+
+        video,
+        #canvas {
             width: 100%;
             height: auto;
             display: block;
         }
-        
+
         #canvas {
             position: absolute;
             top: 0;
             left: 0;
         }
-        
+
         .camera-controls {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-top: 15px;
         }
-        
+
         .btn-camera {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
+
         .facial-step {
             text-align: center;
             margin: 20px 0;
@@ -47,14 +49,14 @@
             background: #f0f4ff;
             border-radius: 12px;
         }
-        
+
         .step-indicator {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-bottom: 20px;
         }
-        
+
         .step {
             width: 40px;
             height: 40px;
@@ -66,46 +68,48 @@
             font-weight: bold;
             color: white;
         }
-        
+
         .step.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
+
         .step.completed {
             background: #4caf50;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="form-card">
             <a href="/" class="back-link">← Volver</a>
             <h2 class="form-title">Registro con Reconocimiento Facial</h2>
             <p class="form-subtitle">Captura tu rostro para acceder fácilmente en el futuro</p>
-            
+
             <div class="step-indicator">
                 <div class="step active" id="step1">1</div>
                 <div class="step" id="step2">2</div>
                 <div class="step" id="step3">3</div>
             </div>
-            
+
             <!-- Paso 1: Captura facial -->
             <div id="stepFacial">
                 <div class="facial-step">
                     <p>📸 Mira a la cámara y asegúrate de tener buena iluminación</p>
-                    <p style="font-size: 12px; margin-top: 5px;">✅ Rostro bien iluminado | ✅ Sin gafas oscuras | ✅ Mira directamente</p>
+                    <p style="font-size: 12px; margin-top: 5px;">✅ Rostro bien iluminado | ✅ Sin gafas oscuras | ✅ Mira
+                        directamente</p>
                 </div>
-                
+
                 <div class="video-container">
                     <video id="video" autoplay playsinline></video>
                     <canvas id="canvas"></canvas>
                 </div>
-                
+
                 <div class="camera-controls">
                     <button id="captureBtn" class="btn btn-camera">📸 Capturar y Verificar Rostro</button>
                 </div>
             </div>
-            
+
             <!-- Paso 2: Confirmación facial -->
             <div id="stepConfirm" style="display:none;">
                 <div class="facial-step">
@@ -117,21 +121,22 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Paso 3: Formulario de registro -->
             <div id="stepForm" style="display:none;">
                 <form id="registerForm">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nombres">Nombres *</label>
-                            <input type="text" id="nombres" required>
+                            <input type="text" id="nombres" maxlength="30" required>
                         </div>
+
                         <div class="form-group">
                             <label for="apellidos">Apellidos *</label>
-                            <input type="text" id="apellidos" required>
+                            <input type="text" id="apellidos" maxlength="30" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="dni">DNI *</label>
@@ -142,42 +147,42 @@
                             <input type="tel" id="celular_facial" maxlength="9" required placeholder="9 dígitos">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="correo_facial">Correo Electrónico *</label>
                         <input type="email" id="correo_facial" required placeholder="ejemplo@correo.com">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="password_facial">Contraseña *</label>
                         <input type="password" id="password_facial" required placeholder="Mínimo 6 caracteres">
                         <small style="color: #666;">Esta contraseña te servirá como respaldo si la cámara falla</small>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary btn-full">✅ Completar Registro Facial</button>
                 </form>
             </div>
-            
+
             <div id="message" class="message"></div>
         </div>
     </div>
-    
+
     <script>
         let video = document.getElementById('video');
         let canvas = document.getElementById('canvas');
         let capturedImage = null;
         let stream = null;
         let messageDiv = document.getElementById('message');
-        
+
         // Inicializar cámara
         async function initCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
                         facingMode: "user",
                         width: { ideal: 640 },
                         height: { ideal: 480 }
-                    } 
+                    }
                 });
                 video.srcObject = stream;
             } catch (err) {
@@ -185,21 +190,21 @@
                 console.error(err);
             }
         }
-        
+
         initCamera();
-        
+
         // Capturar y verificar rostro
         document.getElementById('captureBtn').addEventListener('click', async () => {
             messageDiv.innerHTML = '<div class="loading">📸 Procesando rostro...</div>';
-            
+
             // Capturar imagen
             const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
+
             capturedImage = canvas.toDataURL('image/jpeg');
-            
+
             try {
                 // Verificar si el rostro es válido y no está registrado
                 const response = await fetch('/api/check_face_registered', {
@@ -209,18 +214,18 @@
                     },
                     body: JSON.stringify({ image: capturedImage })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="success">✅ ' + data.message + '</div>';
-                    
+
                     // Cambiar a paso de confirmación
                     document.getElementById('stepFacial').style.display = 'none';
                     document.getElementById('stepConfirm').style.display = 'block';
                     document.getElementById('step2').classList.add('active');
                     document.getElementById('step1').classList.remove('active');
-                    
+
                     // Cerrar cámara
                     if (stream) {
                         stream.getTracks().forEach(track => track.stop());
@@ -233,7 +238,7 @@
                 console.error(error);
             }
         });
-        
+
         // Confirmar rostro
         document.getElementById('confirmYes').addEventListener('click', () => {
             document.getElementById('stepConfirm').style.display = 'none';
@@ -241,48 +246,69 @@
             document.getElementById('step3').classList.add('active');
             document.getElementById('step2').classList.remove('active');
         });
-        
+
         document.getElementById('confirmNo').addEventListener('click', () => {
             // Recargar para reiniciar el proceso
             location.reload();
         });
-        
+
         // Registrar con datos faciales
         const form = document.getElementById('registerForm');
-        
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const nombres = document.getElementById('nombres').value;
             const apellidos = document.getElementById('apellidos').value;
             const dni = document.getElementById('dni_facial').value;
             const celular = document.getElementById('celular_facial').value;
             const correo = document.getElementById('correo_facial').value;
             const password = document.getElementById('password_facial').value;
-            
+
             // Validaciones
             if (!nombres || !apellidos || !dni || !celular || !correo || !password) {
                 messageDiv.innerHTML = '<div class="error">❌ Todos los campos son obligatorios</div>';
                 return;
             }
-            
+
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombres)) {
+                messageDiv.innerHTML = '<div class="error">❌ El nombre no puede contener números</div>';
+                return;
+            }
+
+            if (nombres.length > 30) {
+                messageDiv.innerHTML = '<div class="error">❌ El nombre solo permite máximo 30 caracteres</div>';
+                return;
+            }
+
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) {
+                messageDiv.innerHTML = '<div class="error">❌ El apellido no puede contener números</div>';
+                return;
+            }
+
+            if (apellidos.length > 30) {
+                messageDiv.innerHTML = '<div class="error">❌ El apellido solo permite máximo 30 caracteres</div>';
+                return;
+            }
+
+
             if (dni.length !== 8 || !dni.match(/^\d+$/)) {
                 messageDiv.innerHTML = '<div class="error">❌ El DNI debe tener 8 dígitos numéricos</div>';
                 return;
             }
-            
+
             if (celular.length !== 9 || !celular.match(/^\d+$/)) {
                 messageDiv.innerHTML = '<div class="error">❌ El celular debe tener 9 dígitos numéricos</div>';
                 return;
             }
-            
+
             if (password.length < 6) {
                 messageDiv.innerHTML = '<div class="error">❌ La contraseña debe tener al menos 6 caracteres</div>';
                 return;
             }
-            
+
             messageDiv.innerHTML = '<div class="loading">🔄 Registrando usuario con datos faciales...</div>';
-            
+
             try {
                 const response = await fetch('/api/register_facial', {
                     method: 'POST',
@@ -290,18 +316,18 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        nombres, 
-                        apellidos, 
-                        dni, 
-                        celular, 
-                        correo, 
+                        nombres,
+                        apellidos,
+                        dni,
+                        celular,
+                        correo,
                         password,
                         image: capturedImage
                     })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="success">✅ ' + data.message + '<br>🎉 Ahora puedes iniciar sesión con tu rostro!</div>';
                     setTimeout(() => {
@@ -315,7 +341,7 @@
                 console.error(error);
             }
         });
-        
+
         // Limpiar cámara al salir
         window.addEventListener('beforeunload', () => {
             if (stream) {
@@ -324,4 +350,5 @@
         });
     </script>
 </body>
+
 </html>
