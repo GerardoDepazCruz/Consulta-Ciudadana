@@ -552,6 +552,27 @@ def guardar_licencia():
         return redirect('/')
 
     data = request.form
+
+
+# VALIDAR CAMPOS VACÍOS
+    campos = [
+        'tipo_resolucion',
+        'expediente',
+        'anio_expediente',
+        'ruc',
+        'area',
+        'costo_tramite',
+        'departamento',
+        'provincia',
+        'distrito',
+        'ubigeo'
+    ]
+
+    for campo in campos:
+        if not data.get(campo):
+            return f"El campo {campo} es obligatorio"
+
+
     cursor = mysql.connection.cursor()
 
     fecha_cita, hora_cita = generar_cita()

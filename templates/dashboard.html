@@ -262,10 +262,73 @@
             </div>
 
         </div>
+    </div>
 
-        <!-- <script src="../static/js/dashboard.js"></script>  -->
-        <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div class="footer-logo">
+
+                <img src="{{ url_for('static', filename='images/logo1.png') }}"
+                    style="width:55px;height:55px;object-fit:contain;">
+
+                <div>
+                    <h3>CABOT</h3>
+                    <p>Plataforma Ciudadana Digital</p>
+                </div>
+
+            </div>
+
+            <div class="footer-links">
+
+                <div class="footer-column">
+                    <h4>Servicios</h4>
+                    <a href="#" onclick="window.location.href='/formulario/licencias'">
+                        Licencias
+                    </a>
+
+                    <a href="#" onclick="window.location.href='/formulario/padrones'">
+                        Padrones
+                    </a>
+
+                    <a href="#" onclick="window.location.href='/formulario/partidas'">
+                        Partidas
+                    </a>
+
+                    <a href="#" onclick="mostrarCitas()">
+                        Citas
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Soporte</h4>
+                    <a href="#">Centro de ayuda</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Preguntas frecuentes</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Información</h4>
+                    <a href="#">Política de privacidad</a>
+                    <a href="#">Términos y condiciones</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 CABOT - Todos los derechos reservados
+        </div>
+
+    </footer>
+
+
+    <!-- <script src="../static/js/dashboard.js"></script>  -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 </body>
 
 </html>

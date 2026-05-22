@@ -40,32 +40,38 @@
 
                     <div class="input-group">
                         <label>Año Inscripción</label>
-                        <input type="text" name="anio_inscripcion">
+                        <input type="text" name="anio_inscripcion" id="anio_inscripcion">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Mes Inscripción</label>
-                        <input type="text" name="mes_inscripcion">
+                        <input type="text" name="mes_inscripcion" id="mes_inscripcion">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Departamento</label>
-                        <input type="text" name="depa_cont_l">
+                        <input type="text" name="depa_cont_l" id="depa_cont_l">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
-                        <input type="text" name="prov_pais_l">
+                        <input type="text" name="prov_pais_l" id="prov_pais_l">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
-                        <input type="text" name="dist_ciud_l">
+                        <input type="text" name="dist_ciud_l" id="dist_ciud_l">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Nacionalidad</label>
-                        <input type="text" name="nacional_l">
+                        <input type="text" name="nacional_l" id="nacional_l">
+                        <small class="error-text"></small>
                     </div>
 
                 </div>
@@ -97,9 +103,88 @@
 
         const formPartida = document.getElementById('formPartida');
 
+        const campos = [
+            {
+                id: 'anio_inscripcion',
+                mensaje: 'Ingrese el año de inscripción'
+            },
+            {
+                id: 'mes_inscripcion',
+                mensaje: 'Ingrese el mes de inscripción'
+            },
+            {
+                id: 'depa_cont_l',
+                mensaje: 'Ingrese el departamento'
+            },
+            {
+                id: 'prov_pais_l',
+                mensaje: 'Ingrese la provincia'
+            },
+            {
+                id: 'dist_ciud_l',
+                mensaje: 'Ingrese el distrito'
+            },
+            {
+                id: 'nacional_l',
+                mensaje: 'Ingrese la nacionalidad'
+            }
+        ];
+
+        function mostrarError(input, mensaje) {
+
+            input.classList.add('input-error');
+
+            const error = input.parentElement.querySelector('.error-text');
+
+            error.textContent = mensaje;
+        }
+
+        function limpiarError(input) {
+
+            input.classList.remove('input-error');
+
+            const error = input.parentElement.querySelector('.error-text');
+
+            error.textContent = '';
+        }
+
+        campos.forEach(campo => {
+
+            const input = document.getElementById(campo.id);
+
+            input.addEventListener('input', () => {
+                limpiarError(input);
+            });
+
+        });
+
         formPartida.addEventListener('submit', function (e) {
 
             e.preventDefault();
+
+            let valido = true;
+
+            campos.forEach(campo => {
+
+                const input = document.getElementById(campo.id);
+
+                if (input.value.trim() === '') {
+
+                    mostrarError(input, campo.mensaje);
+
+                    valido = false;
+
+                } else {
+
+                    limpiarError(input);
+
+                }
+
+            });
+
+            if (!valido) {
+                return;
+            }
 
             document.getElementById('mensajeGuardandoPartida').style.display = 'block';
 

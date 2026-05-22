@@ -39,37 +39,44 @@
 
                     <div class="input-group">
                         <label>Departamento</label>
-                        <input type="text" name="departamento">
+                        <input type="text" name="departamento" id="departamento">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
-                        <input type="text" name="provincia">
+                        <input type="text" name="provincia" id="provincia">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
-                        <input type="text" name="distrito">
+                        <input type="text" name="distrito" id="distrito">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Ubigeo</label>
-                        <input type="text" name="ubigeo">
+                        <input type="text" name="ubigeo" id="ubigeo">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Tipo</label>
-                        <input type="text" name="tipo">
+                        <input type="text" name="tipo" id="tipo">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Fecha Solicitud</label>
-                        <input type="text" name="fecha_solicitud">
+                        <input type="text" name="fecha_solicitud" id="fecha_solicitud">
+                        <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Razón Social</label>
-                        <input type="text" name="razon_social">
+                        <input type="text" name="razon_social" id="razon_social">
+                        <small class="error-text"></small>
                     </div>
 
                 </div>
@@ -101,9 +108,92 @@
 
         const formPadron = document.getElementById('formPadron');
 
+        const campos = [
+            {
+                id: 'departamento',
+                mensaje: 'Ingrese el departamento'
+            },
+            {
+                id: 'provincia',
+                mensaje: 'Ingrese la provincia'
+            },
+            {
+                id: 'distrito',
+                mensaje: 'Ingrese el distrito'
+            },
+            {
+                id: 'ubigeo',
+                mensaje: 'Ingrese el ubigeo'
+            },
+            {
+                id: 'tipo',
+                mensaje: 'Ingrese el tipo'
+            },
+            {
+                id: 'fecha_solicitud',
+                mensaje: 'Ingrese la fecha de solicitud'
+            },
+            {
+                id: 'razon_social',
+                mensaje: 'Ingrese la razón social'
+            }
+        ];
+
+        function mostrarError(input, mensaje) {
+
+            input.classList.add('input-error');
+
+            const error = input.parentElement.querySelector('.error-text');
+
+            error.textContent = mensaje;
+        }
+
+        function limpiarError(input) {
+
+            input.classList.remove('input-error');
+
+            const error = input.parentElement.querySelector('.error-text');
+
+            error.textContent = '';
+        }
+
+        campos.forEach(campo => {
+
+            const input = document.getElementById(campo.id);
+
+            input.addEventListener('input', () => {
+                limpiarError(input);
+            });
+
+        });
+
         formPadron.addEventListener('submit', function (e) {
 
             e.preventDefault();
+
+            let valido = true;
+
+            campos.forEach(campo => {
+
+                const input = document.getElementById(campo.id);
+
+                if (input.value.trim() === '') {
+
+                    mostrarError(input, campo.mensaje);
+
+                    valido = false;
+
+                } else {
+
+                    limpiarError(input);
+
+                }
+
+            });
+
+            if (!valido) {
+                return;
+            }
 
             document.getElementById('mensajeGuardandoPadron').style.display = 'block';
 

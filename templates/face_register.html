@@ -6,164 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Facial - CABOT</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        video,
-        #canvas {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .btn-camera {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .facial-step {
-            text-align: center;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f0f4ff;
-            border-radius: 12px;
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
-
-        .step.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .step.completed {
-            background: #4caf50;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/face_register_style.css') }}">
 </head>
 
 <body>
     <div class="container">
         <div class="form-card">
-            <a href="/" class="back-link">← Volver</a>
-            <h2 class="form-title">Registro con Reconocimiento Facial</h2>
-            <p class="form-subtitle">Captura tu rostro para acceder fácilmente en el futuro</p>
 
-            <div class="step-indicator">
-                <div class="step active" id="step1">1</div>
-                <div class="step" id="step2">2</div>
-                <div class="step" id="step3">3</div>
+            <!-- Header azul -->
+            <div class="card-header">
+                <a href="/" class="back-link">← Volver</a>
+                <div class="header-icon-wrap">📸</div>
+                <h2 class="form-title">Registro con Reconocimiento Facial</h2>
+                <p class="form-subtitle">Captura tu rostro para acceder fácilmente en el futuro</p>
             </div>
 
-            <!-- Paso 1: Captura facial -->
-            <div id="stepFacial">
-                <div class="facial-step">
-                    <p>📸 Mira a la cámara y asegúrate de tener buena iluminación</p>
-                    <p style="font-size: 12px; margin-top: 5px;">✅ Rostro bien iluminado | ✅ Sin gafas oscuras | ✅ Mira
-                        directamente</p>
+            <!-- Cuerpo blanco -->
+            <div class="card-body">
+
+                <!-- Indicador de pasos -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step2">2</div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step3">3</div>
                 </div>
 
-                <div class="video-container">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="canvas"></canvas>
-                </div>
+                <!-- Paso 1: Captura facial -->
+                <div id="stepFacial">
+                    <div class="facial-step">
+                        <p>📸 Mira a la cámara y asegúrate de tener buena iluminación</p>
+                        <p>✅ Rostro bien iluminado &nbsp;|&nbsp; ✅ Sin gafas oscuras &nbsp;|&nbsp; ✅ Mira directamente</p>
+                    </div>
 
-                <div class="camera-controls">
-                    <button id="captureBtn" class="btn btn-camera">📸 Capturar y Verificar Rostro</button>
-                </div>
-            </div>
+                    <div class="video-container">
+                        <video id="video" autoplay playsinline></video>
+                        <canvas id="canvas"></canvas>
+                    </div>
 
-            <!-- Paso 2: Confirmación facial -->
-            <div id="stepConfirm" style="display:none;">
-                <div class="facial-step">
-                    <p>✅ ¡Rostro válido detectado!</p>
-                    <p>¿Deseas usar este rostro como método de inicio de sesión?</p>
                     <div class="camera-controls">
-                        <button id="confirmYes" class="btn btn-primary">Sí, usar este rostro</button>
-                        <button id="confirmNo" class="btn btn-secondary">No, volver a capturar</button>
+                        <button id="captureBtn" class="btn btn-camera">📸 Capturar y Verificar Rostro</button>
                     </div>
                 </div>
+
+                <!-- Paso 2: Confirmación facial -->
+                <div id="stepConfirm" style="display:none;">
+                    <div class="facial-step">
+                        <p>✅ ¡Rostro válido detectado!</p>
+                        <p>¿Deseas usar este rostro como método de inicio de sesión?</p>
+                    </div>
+                    <div class="camera-controls">
+                        <button id="confirmYes" class="btn btn-primary">✅ Sí, usar este rostro</button>
+                        <button id="confirmNo" class="btn btn-secondary">🔄 No, volver a capturar</button>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Formulario de registro -->
+                <div id="stepForm" style="display:none;">
+                    <div class="divider"></div>
+                    <form id="registerForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombres">Nombres *</label>
+                                <input type="text" id="nombres" maxlength="30" required placeholder="Juan Carlos">
+                            </div>
+                            <div class="form-group">
+                                <label for="apellidos">Apellidos *</label>
+                                <input type="text" id="apellidos" maxlength="30" required placeholder="Pérez Gómez">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dni_facial">DNI *</label>
+                                <input type="text" id="dni_facial" maxlength="8" required placeholder="8 dígitos">
+                            </div>
+                            <div class="form-group">
+                                <label for="celular_facial">Celular *</label>
+                                <input type="tel" id="celular_facial" maxlength="9" required placeholder="9 dígitos">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="correo_facial">Correo Electrónico *</label>
+                            <input type="email" id="correo_facial" required placeholder="ejemplo@correo.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password_facial">Contraseña *</label>
+                            <input type="password" id="password_facial" required placeholder="Mínimo 6 caracteres">
+                            <small>Esta contraseña te servirá como respaldo si la cámara falla</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">✅ Completar Registro Facial</button>
+                    </form>
+                </div>
+
+                <div id="message" class="message"></div>
+
             </div>
-
-            <!-- Paso 3: Formulario de registro -->
-            <div id="stepForm" style="display:none;">
-                <form id="registerForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombres">Nombres *</label>
-                            <input type="text" id="nombres" maxlength="30" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="apellidos">Apellidos *</label>
-                            <input type="text" id="apellidos" maxlength="30" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="dni">DNI *</label>
-                            <input type="text" id="dni_facial" maxlength="8" required placeholder="8 dígitos">
-                        </div>
-                        <div class="form-group">
-                            <label for="celular">Celular *</label>
-                            <input type="tel" id="celular_facial" maxlength="9" required placeholder="9 dígitos">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="correo_facial">Correo Electrónico *</label>
-                        <input type="email" id="correo_facial" required placeholder="ejemplo@correo.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password_facial">Contraseña *</label>
-                        <input type="password" id="password_facial" required placeholder="Mínimo 6 caracteres">
-                        <small style="color: #666;">Esta contraseña te servirá como respaldo si la cámara falla</small>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-full">✅ Completar Registro Facial</button>
-                </form>
-            </div>
-
-            <div id="message" class="message"></div>
         </div>
     </div>
 
@@ -174,7 +116,6 @@
         let stream = null;
         let messageDiv = document.getElementById('message');
 
-        // Inicializar cámara
         async function initCamera() {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({
@@ -193,11 +134,9 @@
 
         initCamera();
 
-        // Capturar y verificar rostro
         document.getElementById('captureBtn').addEventListener('click', async () => {
             messageDiv.innerHTML = '<div class="loading">📸 Procesando rostro...</div>';
 
-            // Capturar imagen
             const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -206,12 +145,9 @@
             capturedImage = canvas.toDataURL('image/jpeg');
 
             try {
-                // Verificar si el rostro es válido y no está registrado
                 const response = await fetch('/api/check_face_registered', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ image: capturedImage })
                 });
 
@@ -220,13 +156,11 @@
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="success">✅ ' + data.message + '</div>';
 
-                    // Cambiar a paso de confirmación
                     document.getElementById('stepFacial').style.display = 'none';
                     document.getElementById('stepConfirm').style.display = 'block';
                     document.getElementById('step2').classList.add('active');
                     document.getElementById('step1').classList.remove('active');
 
-                    // Cerrar cámara
                     if (stream) {
                         stream.getTracks().forEach(track => track.stop());
                     }
@@ -239,7 +173,6 @@
             }
         });
 
-        // Confirmar rostro
         document.getElementById('confirmYes').addEventListener('click', () => {
             document.getElementById('stepConfirm').style.display = 'none';
             document.getElementById('stepForm').style.display = 'block';
@@ -248,11 +181,9 @@
         });
 
         document.getElementById('confirmNo').addEventListener('click', () => {
-            // Recargar para reiniciar el proceso
             location.reload();
         });
 
-        // Registrar con datos faciales
         const form = document.getElementById('registerForm');
 
         form.addEventListener('submit', async (e) => {
@@ -265,7 +196,6 @@
             const correo = document.getElementById('correo_facial').value;
             const password = document.getElementById('password_facial').value;
 
-            // Validaciones
             if (!nombres || !apellidos || !dni || !celular || !correo || !password) {
                 messageDiv.innerHTML = '<div class="error">❌ Todos los campos son obligatorios</div>';
                 return;
@@ -291,7 +221,6 @@
                 return;
             }
 
-
             if (dni.length !== 8 || !dni.match(/^\d+$/)) {
                 messageDiv.innerHTML = '<div class="error">❌ El DNI debe tener 8 dígitos numéricos</div>';
                 return;
@@ -312,9 +241,7 @@
             try {
                 const response = await fetch('/api/register_facial', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         nombres,
                         apellidos,
@@ -342,7 +269,6 @@
             }
         });
 
-        // Limpiar cámara al salir
         window.addEventListener('beforeunload', () => {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());

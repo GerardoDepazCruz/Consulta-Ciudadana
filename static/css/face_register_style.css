@@ -6,17 +6,28 @@
 
 body {
     min-height: 100vh;
-    background-color: #4a4a4a;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+        ),
+        url("../images/fondo.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Inter', sans-serif;
     padding: 20px;
 }
-
 .container {
     width: 100%;
-    max-width: 440px;
+    max-width: 460px;
 }
 
 .form-card {
@@ -27,7 +38,7 @@ body {
     width: 100%;
 }
 
-/* ---- Header azul ---- */
+/* ── Header azul ── */
 .card-header {
     background: #1a5fa8;
     padding: 36px 30px 30px;
@@ -65,24 +76,15 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 4px;
-}
-
-.header-icon-wrap img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-}
-
-.header-icon-wrap .icon-emoji {
     font-size: 32px;
-    line-height: 1;
 }
 
 .form-title {
     color: #fff;
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 700;
     margin: 0;
+    text-align: center;
 }
 
 .form-subtitle {
@@ -90,37 +92,35 @@ body {
     font-size: 13px;
     font-weight: 400;
     margin: 0;
+    text-align: center;
 }
 
-/* ---- Cuerpo blanco ---- */
+/* ── Cuerpo blanco ── */
 .card-body {
     padding: 28px 24px 32px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    overflow: hidden;
-    width: 100%;
 }
 
-/* ---- Indicador de pasos ---- */
+/* ── Indicador de pasos ── */
 .step-indicator {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 0;
-    margin-bottom: 4px;
+    align-items: center;
+    gap: 12px;
 }
 
 .step {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #ddd;
+    background: #d0d8e8;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     color: #fff;
     transition: background 0.3s;
 }
@@ -130,43 +130,47 @@ body {
 }
 
 .step.completed {
-    background: #4caf50;
+    background: #2e7d32;
 }
 
 .step-line {
     flex: 1;
     height: 2px;
-    background: #ddd;
-    max-width: 48px;
+    background: #d0d8e8;
+    max-width: 40px;
 }
 
-/* ---- Info facial ---- */
+/* ── Info facial ── */
 .facial-step {
     text-align: center;
     padding: 14px 16px;
-    background: #f0f6ff;
+    background: #e3f0ff;
     border-radius: 12px;
+    color: #1a5fa8;
     font-size: 14px;
-    color: #333;
+    font-weight: 500;
     line-height: 1.6;
 }
 
-.step-hints {
+.facial-step p:last-child {
     font-size: 12px;
-    color: #666;
-    margin-top: 6px;
+    color: #3a7fcf;
+    margin-top: 4px;
+    font-weight: 400;
 }
 
-/* ---- Video ---- */
+/* ── Video ── */
 .video-container {
     position: relative;
     width: 100%;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     background: #000;
+    margin-top: 14px;
 }
 
-video, #canvas {
+video,
+#canvas {
     width: 100%;
     height: auto;
     display: block;
@@ -178,71 +182,7 @@ video, #canvas {
     left: 0;
 }
 
-/* ---- Form ---- */
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.form-row {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-}
-
-.form-row .form-group {
-    flex: 1;
-    min-width: 0;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-}
-
-.form-group label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1a5fa8;
-}
-
-.form-group small {
-    font-size: 11px;
-    color: #888;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1.5px solid #d0d8e8;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #333;
-    outline: none;
-    background: #fff;
-    box-shadow: none;
-    box-sizing: border-box;
-    -webkit-appearance: none;
-    appearance: none;
-    transition: border-color 0.2s;
-}
-
-.form-group input::placeholder {
-    color: #b0b8c8;
-}
-
-.form-group input:focus {
-    border-color: #1a5fa8;
-    background: #fff;
-    box-shadow: none;
-}
-
-/* ---- Botones ---- */
+/* ── Botones ── */
 .btn {
     width: 100%;
     padding: 15px 20px;
@@ -273,6 +213,15 @@ form {
     opacity: 0.9;
 }
 
+.btn-camera {
+    background: #1a5fa8;
+    color: #fff;
+}
+
+.btn-camera:hover {
+    opacity: 0.9;
+}
+
 .btn-secondary {
     background: #f0ede8;
     color: #555;
@@ -283,21 +232,77 @@ form {
     background: #e6e2dc;
 }
 
-.btn-group {
+.camera-controls {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    margin-top: 14px;
 }
 
-.btn-icon {
-    font-size: 18px;
-    line-height: 1;
+/* ── Divisor ── */
+.divider {
+    height: 1px;
+    background: #e8e8e8;
 }
 
-#message {
+/* ── Formulario ── */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     margin-top: 4px;
 }
 
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a5fa8;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #d0d8e8;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    background: #fff;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input::placeholder {
+    color: #b0b8c8;
+}
+
+.form-group input:focus {
+    border-color: #1a5fa8;
+}
+
+.form-group small {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* ── Mensajes ── */
 .message {
     width: 100%;
 }
@@ -309,7 +314,6 @@ form {
     border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
-    line-height: 1.6;
 }
 
 .error {
@@ -328,4 +332,11 @@ form {
     border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 400px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }
