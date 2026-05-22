@@ -94,7 +94,18 @@ body {
     font-weight: 700;
     cursor: pointer;
 }
+.input-error {
+    border: 2px solid #e53935 !important;
+    background: #fff5f5;
+}
 
+.error-text {
+    color: #e53935;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    font-weight: 500;
+}
 @keyframes pulse {
     0% {
         opacity: 0.5;
