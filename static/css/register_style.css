@@ -6,7 +6,19 @@
 
 body {
     min-height: 100vh;
-    background-color: #4a4a4a;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+        ),
+        url("../images/fondo.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,7 +28,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 420px;
+    max-width: 460px;
 }
 
 .form-card {
@@ -27,7 +39,7 @@ body {
     width: 100%;
 }
 
-/* ---- Header azul ---- */
+/* ── Header azul ── */
 .card-header {
     background: #1a5fa8;
     padding: 36px 30px 30px;
@@ -73,11 +85,6 @@ body {
     object-fit: contain;
 }
 
-.header-icon-wrap .icon-emoji {
-    font-size: 32px;
-    line-height: 1;
-}
-
 .form-title {
     color: #fff;
     font-size: 26px;
@@ -92,17 +99,16 @@ body {
     margin: 0;
 }
 
-/* ---- Cuerpo blanco ---- */
+/* ── Cuerpo blanco ── */
 .card-body {
     padding: 28px 24px 32px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     overflow: hidden;
     width: 100%;
 }
 
-/* ---- Form ---- */
 form {
     width: 100%;
     display: flex;
@@ -110,19 +116,14 @@ form {
     gap: 14px;
 }
 
-/* ---- Fila doble ---- */
+/* Fila de dos columnas */
 .form-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
     width: 100%;
 }
 
-.form-row .form-group {
-    flex: 1;
-    min-width: 0;
-}
-
-/* ---- Inputs ---- */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -131,18 +132,18 @@ form {
 }
 
 .form-group label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #1a5fa8;
 }
 
 .form-group input {
     width: 100%;
-    padding: 13px 14px;
+    padding: 14px 16px;
     border: 1.5px solid #d0d8e8;
     border-radius: 12px;
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     outline: none;
     background: #fff;
@@ -163,7 +164,7 @@ form {
     box-shadow: none;
 }
 
-/* ---- Botones ---- */
+/* ── Botones ── */
 .btn {
     width: 100%;
     padding: 15px 20px;
@@ -179,6 +180,7 @@ form {
     gap: 10px;
     transition: opacity 0.2s, transform 0.1s;
     box-sizing: border-box;
+    text-decoration: none;
 }
 
 .btn:active {
@@ -206,24 +208,18 @@ form {
 }
 
 .btn-icon {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
 }
 
-.btn img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-}
-
-/* ---- Divider ---- */
+/* ── Divisor ── */
 .divider {
     height: 1px;
     background: #e8e8e8;
     margin: 2px 0;
 }
 
-/* ---- Mensajes ---- */
+/* ── Mensajes ── */
 #message {
     margin-top: 4px;
 }
@@ -257,4 +253,11 @@ form {
     border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 400px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }

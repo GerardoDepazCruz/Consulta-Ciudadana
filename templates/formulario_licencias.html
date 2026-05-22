@@ -10,6 +10,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_licencias.css') }}">
 
+    <style>
+
+        .input-error{
+            border:2px solid #e53935 !important;
+            background:#fff5f5;
+        }
+
+        .error-text{
+            color:#e53935;
+            font-size:13px;
+            margin-top:6px;
+            font-weight:600;
+            display:none;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -18,12 +35,10 @@
 
         <div class="form-card">
 
-            <!-- BOTON VOLVER -->
             <button class="btn-volver" onclick="window.location.href='/dashboard'">
                 ← Volver
             </button>
 
-            <!-- HEADER -->
             <div class="form-header">
 
                 <h1>🚗 Formulario Licencias</h1>
@@ -35,7 +50,6 @@
 
             </div>
 
-            <!-- FORM -->
             <form id="formLicencia" action="/guardar_licencia" method="POST">
 
                 <div class="form-grid">
@@ -43,51 +57,61 @@
                     <div class="input-group">
                         <label>Tipo Resolución</label>
                         <input type="text" name="tipo_resolucion">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Expediente</label>
                         <input type="text" name="expediente">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Año Expediente</label>
                         <input type="text" name="anio_expediente">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>RUC</label>
                         <input type="text" name="ruc">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Área</label>
                         <input type="text" name="area">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Costo Trámite</label>
                         <input type="text" name="costo_tramite">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Departamento</label>
                         <input type="text" name="departamento">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
                         <input type="text" name="provincia">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
                         <input type="text" name="distrito">
+                        <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Ubigeo</label>
                         <input type="text" name="ubigeo">
+                        <div class="error-text"></div>
                     </div>
 
                 </div>
@@ -96,7 +120,6 @@
                     Guardar Cita
                 </button>
 
-                <!-- MENSAJE -->
                 <div id="mensajeGuardando" style="
                     display:none;
                     margin-top:15px;
@@ -113,8 +136,8 @@
         </div>
 
     </div>
-
-    <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
+    
+     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 
     <script>
 
@@ -123,6 +146,35 @@
         formLicencia.addEventListener('submit', function (e) {
 
             e.preventDefault();
+
+            let valido = true;
+
+            const grupos = document.querySelectorAll('.input-group');
+
+            grupos.forEach(grupo => {
+
+                const input = grupo.querySelector('input');
+                const error = grupo.querySelector('.error-text');
+                const label = grupo.querySelector('label').innerText;
+
+                input.classList.remove('input-error');
+                error.style.display = 'none';
+
+                if(input.value.trim() === ''){
+
+                    valido = false;
+
+                    input.classList.add('input-error');
+
+                    error.innerHTML = `⚠️ ${label} es obligatorio`;
+                    error.style.display = 'block';
+                }
+
+            });
+
+            if(!valido){
+                return;
+            }
 
             document.getElementById('mensajeGuardando').style.display = 'block';
 
