@@ -556,6 +556,29 @@ tr:hover {
     color: rgba(255,255,255,0.6);
 }
 
+.mis-citas-container{
+    margin-top:20px;
+    text-align:center;
+}
+
+.btn-mis-citas{
+    padding:18px 29px;
+    border:none;
+    border-radius:10px;
+    background:#0f2ba5;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.3s;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-mis-citas:hover{
+    background:#5a6fd6;
+    transform:scale(1.05);
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
