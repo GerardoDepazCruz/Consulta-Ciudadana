@@ -8,11 +8,11 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar">
 
         <div class="nav-logo">
@@ -48,6 +48,11 @@
                 <span class="nav-label">Citas</span>
             </a>
 
+            <a href="#" class="nav-item" onclick="toggleDarkMode()">
+                <span style="font-size: 22px;" id="darkModeIcon">🌙</span>
+                <span class="nav-label">Tema</span>
+            </a>
+
         </div>
 
         <div class="nav-right">
@@ -61,10 +66,8 @@
 
     </nav>
 
-    <!-- CONTENIDO -->
     <div class="dashboard-content">
 
-        <!-- BIENVENIDA -->
         <div class="welcome-banner">
 
             <div>
@@ -84,76 +87,45 @@
 
         </div>
 
-        <!-- INICIO -->
         <div id="inicioSection">
 
-            <div class="inicio-card">
+            <div class="inicio-card" style="padding: 40px; text-align: center;">
 
-                <h1 style="font-size:35px;color:#333;">
+                <h1 style="font-size:35px;color:#333; margin-bottom: 15px;">
                     Plataforma Ciudadana CABOT
                 </h1>
 
-                <p style="margin-top:20px;color:#666;line-height:1.8;">
-                    CABOT es una plataforma digital que permite consultar
-                    información ciudadana relacionada con licencias,
-                    padrones y partidas registrales. Además, permite
-                    programar citas para realizar trámites municipales
-                    de manera rápida y organizada.
+                <p style="color:#666; line-height:1.8; max-width: 800px; margin: 0 auto 35px auto; font-size: 16px;">
+                    CABOT es una plataforma digital que permite consultar información ciudadana relacionada con licencias, padrones y partidas registrales. Además, permite programar citas para realizar trámites municipales de manera rápida y organizada.
                 </p>
 
-                <div class="inicio-grid">
+                <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 0 auto 35px auto; max-width: 80%;">
 
-                    <div class="inicio-item">
-                        <img src="{{ url_for('static', filename='images/licencia.png') }}"
-                            style="width:70px;height:70px;">
-                        <h3>Licencias</h3>
-                        <p>Consulta licencias municipales y comerciales.</p>
-                    </div>
-
-                    <div class="inicio-item">
-                        <img src="{{ url_for('static', filename='images/padron.png') }}"
-                            style="width:70px;height:70px;">
-                        <h3>Padrones</h3>
-                        <p>Consulta registros y padrones municipales.</p>
-                    </div>
-
-                    <div class="inicio-item">
-                        <img src="{{ url_for('static', filename='images/partida.png') }}"
-                            style="width:70px;height:70px;">
-                        <h3>Partidas</h3>
-                        <p>Consulta partidas registrales.</p>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- BOTONES -->
-            <div class="inicio-card">
-
-                <h2 style="text-align:center;">
+                <h2 style="margin-bottom: 30px; font-size: 22px; color: #1a5fa8;">
                     ¿QUÉ TRÁMITE QUIERES REALIZAR HOY?
                 </h2>
 
-                <div class="tramite-buttons">
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
 
-                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/licencias'">
-                        🚗<br><br>LICENCIAS
+                    <button class="btn-card" onclick="window.location.href='/formulario/licencias'">
+                        <span class="icon" style="font-size: 45px;">🚗</span>
+                        LICENCIAS
                     </button>
 
-                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/partidas'">
-                        📄<br><br>PARTIDAS
+                    <button class="btn-card" onclick="window.location.href='/formulario/partidas'">
+                        <span class="icon" style="font-size: 45px;">📄</span>
+                        PARTIDAS
                     </button>
 
-                    <button class="tramite-cuadro" onclick="window.location.href='/formulario/padrones'">
-                        📋<br><br>PADRONES
+                    <button class="btn-card" onclick="window.location.href='/formulario/padrones'">
+                        <span class="icon" style="font-size: 45px;">📋</span>
+                        PADRONES
                     </button>
 
                 </div>
 
             </div>
 
-            <!-- ESTADISTICAS -->
             <div class="stats-container">
 
                 <div class="stat-card">
@@ -175,14 +147,28 @@
 
         </div>
 
-        <!-- TABLAS -->
         <div id="tramitesContent" class="tramites-section">
-
-
 
             <h3 id="sectionTitle" class="section-title"></h3>
 
-            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar...">
+            <div style="background: white; padding: 20px 25px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 15px; color: #1a5fa8; display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;">
+                    <span style="font-size: 18px;">⚙️</span> Filtros Avanzados
+                </h4>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <input type="text" id="searchInput" class="search-box" placeholder="🔍 Búsqueda general..." style="flex: 2; min-width: 200px; margin-bottom: 0;">
+                    
+                    <select id="columnaFiltro" class="search-box" style="flex: 1; min-width: 180px; margin-bottom: 0; cursor: pointer;">
+                        <option value="todas">🔍 Buscar en todas</option>
+                    </select>
+
+                    <select id="ordenFiltro" class="search-box" style="flex: 1; min-width: 180px; margin-bottom: 0; cursor: pointer;">
+                        <option value="asc">↕️ Orden: A - Z</option>
+                        <option value="desc">↕️ Orden: Z - A</option>
+                    </select>
+                </div>
+            </div>
 
             <div id="tableContent" class="table-container">
 
@@ -202,7 +188,6 @@
 
         </div>
 
-        <!-- CITAS -->
         <div id="citasSection" class="tramites-section">
 
             <h2 class="section-title">
@@ -225,9 +210,9 @@
                         de forma eficiente, brindando una mejor experiencia para todos los ciudadanos.
                     </p>
 
-                    <div class="mis-citas-container">
+                    <div class="mis-citas-container" style="margin-top: 20px;">
 
-                        <button class="btn-mis-citas" onclick="window.location.href='/mis_citas'">
+                        <button class="btn-cabot btn-primary" onclick="window.location.href='/mis_citas'">
                             📅 Ver mis citas
                         </button>
 
@@ -253,27 +238,28 @@
                 </div>
             </div>
 
-            <div class="tramite-buttons">
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
 
-                <button class="btn-tramite grande" onclick="window.location.href='/formulario/licencias'">
-                    🚗 <br> Licencias
+                <button class="btn-card" onclick="window.location.href='/formulario/licencias'">
+                    <span class="icon" style="font-size: 45px;">🚗</span>
+                    LICENCIAS
                 </button>
 
-                <button class="btn-tramite grande" onclick="window.location.href='/formulario/partidas'">
-                    📄 <br> Partidas
+                <button class="btn-card" onclick="window.location.href='/formulario/partidas'">
+                    <span class="icon" style="font-size: 45px;">📄</span>
+                    PARTIDAS
                 </button>
 
-                <button class="btn-tramite grande" onclick="window.location.href='/formulario/padrones'">
-                    📋 <br> Padrones
+                <button class="btn-card" onclick="window.location.href='/formulario/padrones'">
+                    <span class="icon" style="font-size: 45px;">📋</span>
+                    PADRONES
                 </button>
-
 
             </div>
 
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer class="footer">
 
         <div class="footer-container">
@@ -334,8 +320,6 @@
 
     </footer>
 
-
-    <!-- <script src="../static/js/dashboard.js"></script>  -->
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 </body>

@@ -21,6 +21,11 @@ body {
 
     min-height: 100vh;
     color: #222;
+
+    /* ✨ AQUÍ ESTÁ LA SOLUCIÓN AL DESCUADRE DE LAS 3 PARTES ✨ */
+    display: block !important; 
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 /* ───────────────── NAVBAR ───────────────── */
@@ -484,8 +489,6 @@ tr:hover {
     }
 }
 
-
-
 .footer {
     width: 100%;
     background: #0f1f3d;
@@ -595,8 +598,6 @@ tr:hover {
     }
 
 }
-
-
 
 /* ───────────────── RESPONSIVE ───────────────── */
 

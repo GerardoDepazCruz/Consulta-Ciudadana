@@ -6,37 +6,26 @@
     <title>Registrarse - CABOT</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        .error-text {
-            color: #c62828;
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-        }
-        input.error {
-            border: 1.5px solid #c62828 !important;
-        }
+        .error-text { color: #c62828; font-size: 14px; margin-top: 4px; display: block; font-weight: 500; }
+        input.error { border: 1.5px solid #c62828 !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-card">
-
-            <!-- Header azul -->
             <div class="card-header">
                 <a href="/" class="back-link">← Volver</a>
                 <div class="header-icon-wrap">
-                    <img src="{{ url_for('static', filename='images/logo1.png') }}"
-                        style="width:42px;height:42px;object-fit:contain;">
+                    <img src="{{ url_for('static', filename='images/logo1.png') }}" style="width:42px;height:42px;object-fit:contain;">
                 </div>
                 <h2 class="form-title">Crear Cuenta</h2>
                 <p class="form-subtitle">Completa tus datos para registrarte</p>
             </div>
 
-            <!-- Cuerpo blanco -->
             <div class="card-body">
                 <form id="registerForm">
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nombres">Nombres</label>
@@ -81,22 +70,19 @@
                         <small id="confirmPasswordError" class="error-text"></small>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        <span class="btn-icon">✓</span>
-                        Registrarse
+                    <button type="submit" class="btn-cabot btn-primary btn-full" style="margin-top: 10px;">
+                        <span class="btn-icon">✓</span> Registrarse
                     </button>
-
                 </form>
 
-                <div class="divider"></div>
+                <div class="divider" style="margin: 15px 0;"></div>
 
-                <button class="btn btn-secondary" onclick="window.location.href='/login'">
+                <button class="btn-cabot btn-secondary btn-full" onclick="window.location.href='/login'">
                     ¿Ya tienes cuenta? Inicia sesión aquí
                 </button>
 
                 <div id="message" class="message"></div>
             </div>
-
         </div>
     </div>
 
@@ -105,10 +91,8 @@
         const messageDiv = document.getElementById('message');
 
         function limpiarErrores() {
-            const errores = document.querySelectorAll('.error-text');
-            errores.forEach(error => { error.textContent = ''; });
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => { input.classList.remove('error'); });
+            document.querySelectorAll('.error-text').forEach(e => e.textContent = '');
+            document.querySelectorAll('input').forEach(i => i.classList.remove('error'));
             messageDiv.innerHTML = '';
         }
 
@@ -129,34 +113,13 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
 
-            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombres)) {
-                mostrarError('nombres', 'nombresError', 'El nombre no puede contener números ni símbolos');
-                return;
-            }
-            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) {
-                mostrarError('apellidos', 'apellidosError', 'El apellido no puede contener números ni símbolos');
-                return;
-            }
-            if (!/^\d{8}$/.test(dni)) {
-                mostrarError('dni', 'dniError', 'El DNI debe tener 8 números');
-                return;
-            }
-            if (!/^9\d{8}$/.test(celular)) {
-                mostrarError('celular', 'celularError', 'El celular debe tener 9 números y comenzar con 9');
-                return;
-            }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
-                mostrarError('correo', 'correoError', 'Ingresa un correo válido');
-                return;
-            }
-            if (password.length < 6) {
-                mostrarError('password', 'passwordError', 'La contraseña debe tener mínimo 6 caracteres');
-                return;
-            }
-            if (password !== confirmPassword) {
-                mostrarError('confirm_password', 'confirmPasswordError', 'Las contraseñas no coinciden');
-                return;
-            }
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombres)) { mostrarError('nombres', 'nombresError', 'Nombre inválido'); return; }
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellidos)) { mostrarError('apellidos', 'apellidosError', 'Apellido inválido'); return; }
+            if (!/^\d{8}$/.test(dni)) { mostrarError('dni', 'dniError', 'DNI debe tener 8 números'); return; }
+            if (!/^9\d{8}$/.test(celular)) { mostrarError('celular', 'celularError', 'Celular de 9 dígitos (inicio 9)'); return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) { mostrarError('correo', 'correoError', 'Correo inválido'); return; }
+            if (password.length < 6) { mostrarError('password', 'passwordError', 'Mínimo 6 caracteres'); return; }
+            if (password !== confirmPassword) { mostrarError('confirm_password', 'confirmPasswordError', 'Contraseñas no coinciden'); return; }
 
             messageDiv.innerHTML = '<div class="loading">Creando cuenta...</div>';
 
@@ -166,11 +129,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nombres, apellidos, dni, celular, correo, password })
                 });
-
-                if (!response.ok) { throw new Error('Error del servidor'); }
-
                 const data = await response.json();
-
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="success">✅ ' + data.message + '</div>';
                     setTimeout(() => { window.location.href = '/login'; }, 2000);
@@ -178,10 +137,10 @@
                     messageDiv.innerHTML = '<div class="error">❌ ' + data.message + '</div>';
                 }
             } catch (error) {
-                console.error(error);
-                messageDiv.innerHTML = '<div class="error">❌ Error de conexión o del servidor</div>';
+                messageDiv.innerHTML = '<div class="error">❌ Error de conexión</div>';
             }
         });
     </script>
+    <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 </body>
 </html>

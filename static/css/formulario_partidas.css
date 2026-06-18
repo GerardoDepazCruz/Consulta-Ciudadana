@@ -10,38 +10,26 @@ body {
     background-size: cover;
     min-height: 100vh;
     padding: 40px 20px;
+    transition: background 0.3s, color 0.3s;
 }
 
+/* CONTENEDOR */
 .container {
     max-width: 900px;
     margin: auto;
 }
 
+/* FORMULARIO */
 .form-card {
     background: white;
     border-radius: 25px;
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-top: 6px solid #1a5fa8; /* Borde institucional CABOT */
+    transition: all 0.3s ease;
 }
 
-.btn-volver {
-    background: #eef2ff;
-    color: #667eea;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 25px;
-    transition: 0.3s;
-}
-
-.btn-volver:hover {
-    background: #667eea;
-    color: white;
-}
-
+/* TITULOS */
 .form-header {
     margin-bottom: 35px;
 }
@@ -57,12 +45,14 @@ body {
     font-size: 15px;
 }
 
+/* GRID */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
 
+/* INPUTS */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -80,28 +70,18 @@ body {
     border: 1px solid #dcdcdc;
     border-radius: 12px;
     font-size: 14px;
+    font-family: inherit;
     transition: 0.3s;
     outline: none;
+    width: 100%;
 }
 
 .input-group input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+    border-color: #1a5fa8;
+    box-shadow: 0 0 0 4px rgba(26, 95, 168, 0.15);
 }
 
-.btn-guardar {
-    width: 100%;
-    margin-top: 35px;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #2e20a8 0%, #3e1cff 100%);
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
+/* ERRORES */
 .input-error {
     border: 2px solid #e53935 !important;
     background: #fff5f5;
@@ -109,30 +89,112 @@ body {
 
 .error-text {
     color: #e53935;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
-    font-weight: 500;
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 600;
+    display: block; 
+    min-height: 18px; /* Evita que el diseño salte */
+}
+
+/* BOTONES GLOBALES CABOT */
+.btn-cabot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background: #eef2ff;
+    color: #1a5fa8;
+    padding: 12px 20px;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background: #1a5fa8;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1a5fa8 0%, #0d47a1 100%);
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(26, 95, 168, 0.35);
 }
 
 @keyframes pulse {
-    0% {
-        opacity: 0.5;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.5;
-    }
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 
 @media(max-width:768px) {
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
+    .form-grid { grid-template-columns: 1fr; }
+    .form-card { padding: 25px; }
 }
+
+/* =========================================
+   MODO OSCURO (INDEPENDIENTE)
+========================================= */
+body.dark-mode {
+    background: linear-gradient(rgba(5, 10, 18, 0.95), rgba(5, 10, 18, 0.95)), url("../images/fondoperfil.jpg") !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    color: #e2e8f0;
+}
+
+body.dark-mode .form-card {
+    background: rgba(15, 23, 42, 0.95) !important;
+    border-top: 6px solid #3b82f6 !important;
+    border-left: 1px solid #1e293b;
+    border-right: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .form-header h1 { color: #f8fafc !important; }
+body.dark-mode .form-header p { color: #cbd5e1 !important; }
+body.dark-mode .input-group label { color: #94a3b8 !important; }
+
+body.dark-mode .input-group input {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .input-group input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+body.dark-mode .btn-secondary {
+    background: #1e293b !important;
+    color: #cbd5e1 !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .btn-secondary:hover {
+    background: #334155 !important;
+    color: white !important;
+}
+
+body.dark-mode .input-error {
+    border: 2px solid #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+body.dark-mode .error-text { color: #f87171 !important; }

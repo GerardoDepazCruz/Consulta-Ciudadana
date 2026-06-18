@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Formulario Padrones</title>
+    <title>Formulario Padrones - CABOT</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_padrones.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -18,19 +18,18 @@
 
         <div class="form-card">
 
-            <button class="btn-volver" onclick="window.location.href='/dashboard'">
-                ← Volver
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <button type="button" class="btn-cabot btn-secondary" style="padding: 10px 20px; width: auto;" onclick="window.location.href='/dashboard'">
+                    ← Volver al Dashboard
+                </button>
+                <button type="button" class="btn-cabot btn-secondary" onclick="localToggleDarkMode()">
+                    <span id="darkModeIcon">🌙</span> Tema
+                </button>
+            </div>
 
             <div class="form-header">
-
                 <h1>📋 Formulario Padrones</h1>
-
-                <p>
-                    Complete los datos necesarios
-                    para registrar un padrón.
-                </p>
-
+                <p>Complete los datos necesarios para registrar un padrón.</p>
             </div>
 
             <form id="formPadron" action="/guardar_padron" method="POST">
@@ -39,57 +38,57 @@
 
                     <div class="input-group">
                         <label>Departamento</label>
-                        <input type="text" name="departamento" id="departamento">
+                        <input type="text" name="departamento" id="departamento" placeholder="Ej. Lima">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
-                        <input type="text" name="provincia" id="provincia">
+                        <input type="text" name="provincia" id="provincia" placeholder="Ej. Lima">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
-                        <input type="text" name="distrito" id="distrito">
+                        <input type="text" name="distrito" id="distrito" placeholder="Ej. San Isidro">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Ubigeo</label>
-                        <input type="text" name="ubigeo" id="ubigeo">
+                        <input type="text" name="ubigeo" id="ubigeo" placeholder="Ej. 150131" maxlength="6">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Tipo</label>
-                        <input type="text" name="tipo" id="tipo">
+                        <input type="text" name="tipo" id="tipo" placeholder="Ej. Contribuyente">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Fecha Solicitud</label>
-                        <input type="text" name="fecha_solicitud" id="fecha_solicitud">
+                        <input type="date" name="fecha_solicitud" id="fecha_solicitud">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Razón Social</label>
-                        <input type="text" name="razon_social" id="razon_social">
+                        <input type="text" name="razon_social" id="razon_social" placeholder="Nombre de la empresa o persona">
                         <small class="error-text"></small>
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn-guardar">
-                    Guardar Cita
+                <button type="submit" class="btn-cabot btn-primary btn-full" style="margin-top: 35px;">
+                    <span style="font-size: 22px;">💾</span> Guardar Cita
                 </button>
 
                 <div id="mensajeGuardandoPadron" style="
                     display:none;
                     margin-top:15px;
                     text-align:center;
-                    color:#667eea;
+                    color:#1a5fa8;
                     font-weight:600;
                     animation:pulse 1s infinite;
                 ">
@@ -105,104 +104,87 @@
     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 
     <script>
+        // ──────────────────────────────────────────────────────────
+        // 1. MODO OSCURO LOCAL
+        // ──────────────────────────────────────────────────────────
+        function localToggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
 
+        // Cargar preferencia al iniciar
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').textContent = '☀️';
+        }
+
+        // ──────────────────────────────────────────────────────────
+        // 2. VALIDACIÓN DEL FORMULARIO
+        // ──────────────────────────────────────────────────────────
         const formPadron = document.getElementById('formPadron');
 
         const campos = [
-            {
-                id: 'departamento',
-                mensaje: 'Ingrese el departamento'
-            },
-            {
-                id: 'provincia',
-                mensaje: 'Ingrese la provincia'
-            },
-            {
-                id: 'distrito',
-                mensaje: 'Ingrese el distrito'
-            },
-            {
-                id: 'ubigeo',
-                mensaje: 'Ingrese el ubigeo'
-            },
-            {
-                id: 'tipo',
-                mensaje: 'Ingrese el tipo'
-            },
-            {
-                id: 'fecha_solicitud',
-                mensaje: 'Ingrese la fecha de solicitud'
-            },
-            {
-                id: 'razon_social',
-                mensaje: 'Ingrese la razón social'
-            }
+            { id: 'departamento', mensaje: 'Ingrese el departamento' },
+            { id: 'provincia', mensaje: 'Ingrese la provincia' },
+            { id: 'distrito', mensaje: 'Ingrese el distrito' },
+            { id: 'ubigeo', mensaje: 'Ingrese el ubigeo' },
+            { id: 'tipo', mensaje: 'Ingrese el tipo' },
+            { id: 'fecha_solicitud', mensaje: 'Ingrese la fecha de solicitud' },
+            { id: 'razon_social', mensaje: 'Ingrese la razón social' }
         ];
 
         function mostrarError(input, mensaje) {
-
             input.classList.add('input-error');
-
             const error = input.parentElement.querySelector('.error-text');
-
-            error.textContent = mensaje;
+            error.textContent = '⚠️ ' + mensaje;
         }
 
         function limpiarError(input) {
-
             input.classList.remove('input-error');
-
             const error = input.parentElement.querySelector('.error-text');
-
             error.textContent = '';
         }
 
+        // Limpiar error al escribir
         campos.forEach(campo => {
-
             const input = document.getElementById(campo.id);
-
-            input.addEventListener('input', () => {
-                limpiarError(input);
-            });
-
+            if (input) { // Verificación extra de seguridad
+                input.addEventListener('input', () => {
+                    limpiarError(input);
+                });
+            }
         });
 
         formPadron.addEventListener('submit', function (e) {
-
             e.preventDefault();
-
             let valido = true;
 
             campos.forEach(campo => {
-
                 const input = document.getElementById(campo.id);
-
-                if (input.value.trim() === '') {
-
+                if (input && input.value.trim() === '') {
                     mostrarError(input, campo.mensaje);
-
                     valido = false;
-
-                } else {
-
+                } else if (input) {
                     limpiarError(input);
-
                 }
-
             });
 
             if (!valido) {
                 return;
             }
 
-            document.getElementById('mensajeGuardandoPadron').style.display = 'block';
+            // Ajuste de color para el mensaje de guardado según el tema
+            const isDark = document.body.classList.contains('dark-mode');
+            const mensajeDiv = document.getElementById('mensajeGuardandoPadron');
+            mensajeDiv.style.color = isDark ? '#60a5fa' : '#1a5fa8';
+            mensajeDiv.style.display = 'block';
 
             setTimeout(() => {
                 formPadron.submit();
             }, 2000);
-
         });
-
     </script>
 
 </body>

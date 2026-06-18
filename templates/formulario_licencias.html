@@ -5,28 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Formulario Licencias</title>
+    <title>Formulario Licencias - CABOT</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_licencias.css') }}">
-
-    <style>
-
-        .input-error{
-            border:2px solid #e53935 !important;
-            background:#fff5f5;
-        }
-
-        .error-text{
-            color:#e53935;
-            font-size:13px;
-            margin-top:6px;
-            font-weight:600;
-            display:none;
-        }
-
-    </style>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -35,19 +18,21 @@
 
         <div class="form-card">
 
-            <button class="btn-volver" onclick="window.location.href='/dashboard'">
-                ← Volver
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <button type="button" class="btn-cabot btn-secondary" onclick="window.location.href='/dashboard'">
+                    ← Volver al Dashboard
+                </button>
+                <button type="button" class="btn-cabot btn-secondary" onclick="localToggleDarkMode()">
+                    <span id="darkModeIcon">🌙</span> Tema
+                </button>
+            </div>
 
             <div class="form-header">
-
                 <h1>🚗 Formulario Licencias</h1>
-
                 <p>
                     Complete todos los datos necesarios para registrar
                     su trámite de licencia municipal.
                 </p>
-
             </div>
 
             <form id="formLicencia" action="/guardar_licencia" method="POST">
@@ -56,75 +41,75 @@
 
                     <div class="input-group">
                         <label>Tipo Resolución</label>
-                        <input type="text" name="tipo_resolucion">
+                        <input type="text" name="tipo_resolucion" placeholder="Ej. Comercial">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Expediente</label>
-                        <input type="text" name="expediente">
+                        <input type="text" name="expediente" placeholder="N° de Expediente">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Año Expediente</label>
-                        <input type="text" name="anio_expediente">
+                        <input type="text" name="anio_expediente" placeholder="Ej. 2024">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>RUC</label>
-                        <input type="text" name="ruc">
+                        <input type="text" name="ruc" maxlength="11" placeholder="10... o 20...">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Área</label>
-                        <input type="text" name="area">
+                        <input type="text" name="area" placeholder="Ej. 120.50">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Costo Trámite</label>
-                        <input type="text" name="costo_tramite">
+                        <input type="text" name="costo_tramite" placeholder="Ej. 150.00">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Departamento</label>
-                        <input type="text" name="departamento">
+                        <input type="text" name="departamento" placeholder="Ej. Lima">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
-                        <input type="text" name="provincia">
+                        <input type="text" name="provincia" placeholder="Ej. Lima">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
-                        <input type="text" name="distrito">
+                        <input type="text" name="distrito" placeholder="Ej. Los Olivos">
                         <div class="error-text"></div>
                     </div>
 
                     <div class="input-group">
                         <label>Ubigeo</label>
-                        <input type="text" name="ubigeo">
+                        <input type="text" name="ubigeo" maxlength="6" placeholder="Ej. 150117">
                         <div class="error-text"></div>
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn-guardar">
-                    Guardar Cita
+                <button type="submit" class="btn-cabot btn-primary" style="margin-top: 35px;">
+                    <span style="font-size: 22px;">💾</span> Guardar Cita
                 </button>
 
                 <div id="mensajeGuardando" style="
                     display:none;
                     margin-top:15px;
                     text-align:center;
-                    color:#667eea;
+                    color:#1a5fa8;
                     font-weight:600;
                     animation:pulse 1s infinite;
                 ">
@@ -136,23 +121,30 @@
         </div>
 
     </div>
-    
-     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 
     <script>
+        // 1. Control del Modo Oscuro
+        function localToggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
 
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').textContent = '☀️';
+        }
+
+        // 2. Validación del Formulario
         const formLicencia = document.getElementById('formLicencia');
 
         formLicencia.addEventListener('submit', function (e) {
-
             e.preventDefault();
-
             let valido = true;
-
             const grupos = document.querySelectorAll('.input-group');
 
             grupos.forEach(grupo => {
-
                 const input = grupo.querySelector('input');
                 const error = grupo.querySelector('.error-text');
                 const label = grupo.querySelector('label').innerText;
@@ -160,30 +152,28 @@
                 input.classList.remove('input-error');
                 error.style.display = 'none';
 
-                if(input.value.trim() === ''){
-
+                if (input.value.trim() === '') {
                     valido = false;
-
                     input.classList.add('input-error');
-
                     error.innerHTML = `⚠️ ${label} es obligatorio`;
                     error.style.display = 'block';
                 }
-
             });
 
-            if(!valido){
+            if (!valido) {
                 return;
             }
 
-            document.getElementById('mensajeGuardando').style.display = 'block';
+            // Adaptar color del mensaje de carga al modo actual
+            const isDark = document.body.classList.contains('dark-mode');
+            const mensajeGuardando = document.getElementById('mensajeGuardando');
+            mensajeGuardando.style.color = isDark ? '#60a5fa' : '#1a5fa8';
+            mensajeGuardando.style.display = 'block';
 
             setTimeout(() => {
                 formLicencia.submit();
             }, 2000);
-
         });
-
     </script>
 
 </body>

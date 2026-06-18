@@ -357,3 +357,192 @@ td {
 tr:hover {
     background: #f0f4ff !important;
 }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* =========================================
+   ESTILOS GLOBALES DE BOTONES CABOT
+========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.btn-cabot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border: none;
+    border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-cabot:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
+}
+
+.btn-cabot:active {
+    transform: translateY(0);
+}
+
+.btn-primary { background: linear-gradient(135deg, #1a5fa8 0%, #0d47a1 100%); color: #ffffff; }
+.btn-secondary { background: #f0f4ff; color: #1a5fa8; border: 2px solid #1a5fa8; }
+.btn-danger { background: linear-gradient(135deg, #ff4d4d 0%, #d32f2f 100%); color: #ffffff; }
+.btn-full { width: 100%; }
+
+.btn-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 25px;
+    min-width: 180px;
+    min-height: 160px;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #1a5fa8 0%, #0d47a1 100%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(26, 95, 168, 0.3);
+}
+
+.btn-card span.icon { font-size: 45px; }
+
+.btn-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(26, 95, 168, 0.4);
+}
+
+/* =========================================
+   TEMA OSCURO GLOBAL (.dark-mode)
+========================================= */
+body.dark-mode {
+    background: linear-gradient(rgba(5, 10, 18, 0.95), rgba(5, 10, 18, 0.95)), url("../images/fondo.png") !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    color: #e0e0e0;
+}
+
+body.dark-mode .navbar {
+    background: rgba(10, 15, 25, 0.95);
+    border-bottom: 1px solid #1f2a40;
+}
+
+body.dark-mode .footer {
+    background: #050a0f;
+    border-top: 1px solid #1f2a40;
+}
+
+body.dark-mode .inicio-card,
+body.dark-mode .tramites-section,
+body.dark-mode .stat-card,
+body.dark-mode .info-card,
+body.dark-mode .citas-banner,
+body.dark-mode .form-card,
+body.dark-mode .profile-card,
+body.dark-mode .card,
+body.dark-mode .item {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #e2e8f0;
+}
+
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode h4, 
+body.dark-mode .section-title {
+    color: #f8fafc !important;
+}
+
+body.dark-mode p, 
+body.dark-mode label, 
+body.dark-mode .section-description, 
+body.dark-mode .stat-number + div, 
+body.dark-mode b {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .inicio-item {
+    background: #0f172a;
+    border-color: #1e293b;
+}
+
+body.dark-mode .search-box, 
+body.dark-mode input, 
+body.dark-mode select {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .search-box:focus, 
+body.dark-mode input:focus {
+    border-color: #3b82f6 !important;
+}
+
+body.dark-mode table {
+    color: #e2e8f0;
+}
+
+body.dark-mode th {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-bottom: 2px solid #334155 !important;
+}
+
+body.dark-mode tr {
+    border-bottom: 1px solid #1e293b !important;
+}
+
+body.dark-mode tr:nth-child(even) {
+    background: #0f172a !important;
+}
+
+body.dark-mode tr:hover {
+    background: #1e293b !important;
+}
+
+body.dark-mode td {
+    color: #cbd5e1 !important;
+}
+
+/* Fuerza a los contenedores en línea blancos (filtros, tarjetas de citas) a oscurecerse */
+body.dark-mode div[style*="background: white"], 
+body.dark-mode div[style*="background:white"] {
+    background: #0f172a !important;
+    border: 1px solid #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
+/* Fuerza al indicador de paginación a volverse oscuro */
+body.dark-mode div[style*="background: #f0f4ff"] {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
