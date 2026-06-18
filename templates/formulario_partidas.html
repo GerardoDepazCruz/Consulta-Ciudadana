@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Formulario Partidas</title>
+    <title>Formulario Partidas - CABOT</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_partidas.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
@@ -19,19 +18,18 @@
 
         <div class="form-card">
 
-            <button class="btn-volver" onclick="window.location.href='/dashboard'">
-                ← Volver
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <button type="button" class="btn-cabot btn-secondary" style="padding: 10px 20px; width: auto;" onclick="window.location.href='/dashboard'">
+                    ← Volver al Dashboard
+                </button>
+                <button type="button" class="btn-cabot btn-secondary" onclick="localToggleDarkMode()">
+                    <span id="darkModeIcon">🌙</span> Tema
+                </button>
+            </div>
 
             <div class="form-header">
-
                 <h1>📄 Formulario Partidas</h1>
-
-                <p>
-                    Complete los datos para registrar
-                    una solicitud de partidas.
-                </p>
-
+                <p>Complete los datos para registrar una solicitud de partidas registrales.</p>
             </div>
 
             <form id="formPartida" action="/guardar_partida" method="POST">
@@ -40,51 +38,51 @@
 
                     <div class="input-group">
                         <label>Año Inscripción</label>
-                        <input type="text" name="anio_inscripcion" id="anio_inscripcion">
+                        <input type="text" name="anio_inscripcion" id="anio_inscripcion" placeholder="Ej. 1998">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Mes Inscripción</label>
-                        <input type="text" name="mes_inscripcion" id="mes_inscripcion">
+                        <input type="text" name="mes_inscripcion" id="mes_inscripcion" placeholder="Ej. Octubre">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Departamento</label>
-                        <input type="text" name="depa_cont_l" id="depa_cont_l">
+                        <input type="text" name="depa_cont_l" id="depa_cont_l" placeholder="Ej. Lima">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Provincia</label>
-                        <input type="text" name="prov_pais_l" id="prov_pais_l">
+                        <input type="text" name="prov_pais_l" id="prov_pais_l" placeholder="Ej. Lima">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Distrito</label>
-                        <input type="text" name="dist_ciud_l" id="dist_ciud_l">
+                        <input type="text" name="dist_ciud_l" id="dist_ciud_l" placeholder="Ej. Los Olivos">
                         <small class="error-text"></small>
                     </div>
 
                     <div class="input-group">
                         <label>Nacionalidad</label>
-                        <input type="text" name="nacional_l" id="nacional_l">
+                        <input type="text" name="nacional_l" id="nacional_l" placeholder="Ej. Peruana">
                         <small class="error-text"></small>
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn-guardar">
-                    Guardar Cita
+                <button type="submit" class="btn-cabot btn-primary btn-full" style="margin-top: 35px;">
+                    <span style="font-size: 22px;">💾</span> Guardar Cita
                 </button>
 
                 <div id="mensajeGuardandoPartida" style="
                     display:none;
                     margin-top:15px;
                     text-align:center;
-                    color:#667eea;
+                    color:#1a5fa8;
                     font-weight:600;
                     animation:pulse 1s infinite;
                 ">
@@ -100,100 +98,84 @@
     <script src="{{ url_for('static', filename='js/cabot.js') }}"></script>
 
     <script>
+        // ──────────────────────────────────────────────────────────
+        // 1. MODO OSCURO LOCAL
+        // ──────────────────────────────────────────────────────────
+        function localToggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
 
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').textContent = '☀️';
+        }
+
+        // ──────────────────────────────────────────────────────────
+        // 2. VALIDACIÓN DEL FORMULARIO
+        // ──────────────────────────────────────────────────────────
         const formPartida = document.getElementById('formPartida');
 
         const campos = [
-            {
-                id: 'anio_inscripcion',
-                mensaje: 'Ingrese el año de inscripción'
-            },
-            {
-                id: 'mes_inscripcion',
-                mensaje: 'Ingrese el mes de inscripción'
-            },
-            {
-                id: 'depa_cont_l',
-                mensaje: 'Ingrese el departamento'
-            },
-            {
-                id: 'prov_pais_l',
-                mensaje: 'Ingrese la provincia'
-            },
-            {
-                id: 'dist_ciud_l',
-                mensaje: 'Ingrese el distrito'
-            },
-            {
-                id: 'nacional_l',
-                mensaje: 'Ingrese la nacionalidad'
-            }
+            { id: 'anio_inscripcion', mensaje: 'Ingrese el año de inscripción' },
+            { id: 'mes_inscripcion', mensaje: 'Ingrese el mes de inscripción' },
+            { id: 'depa_cont_l', mensaje: 'Ingrese el departamento' },
+            { id: 'prov_pais_l', mensaje: 'Ingrese la provincia' },
+            { id: 'dist_ciud_l', mensaje: 'Ingrese el distrito' },
+            { id: 'nacional_l', mensaje: 'Ingrese la nacionalidad' }
         ];
 
         function mostrarError(input, mensaje) {
-
             input.classList.add('input-error');
-
             const error = input.parentElement.querySelector('.error-text');
-
-            error.textContent = mensaje;
+            error.textContent = '⚠️ ' + mensaje;
         }
 
         function limpiarError(input) {
-
             input.classList.remove('input-error');
-
             const error = input.parentElement.querySelector('.error-text');
-
             error.textContent = '';
         }
 
         campos.forEach(campo => {
-
             const input = document.getElementById(campo.id);
-
-            input.addEventListener('input', () => {
-                limpiarError(input);
-            });
-
+            if (input) {
+                input.addEventListener('input', () => {
+                    limpiarError(input);
+                });
+            }
         });
 
         formPartida.addEventListener('submit', function (e) {
-
             e.preventDefault();
-
             let valido = true;
 
             campos.forEach(campo => {
-
                 const input = document.getElementById(campo.id);
-
-                if (input.value.trim() === '') {
-
+                if (input && input.value.trim() === '') {
                     mostrarError(input, campo.mensaje);
-
                     valido = false;
-
-                } else {
-
+                } else if (input) {
                     limpiarError(input);
-
                 }
-
             });
 
             if (!valido) {
                 return;
             }
 
-            document.getElementById('mensajeGuardandoPartida').style.display = 'block';
+            // Color del texto de carga según el modo
+            const isDark = document.body.classList.contains('dark-mode');
+            const mensajeDiv = document.getElementById('mensajeGuardandoPartida');
+            mensajeDiv.style.color = isDark ? '#60a5fa' : '#1a5fa8';
+            mensajeDiv.style.display = 'block';
 
             setTimeout(() => {
                 formPartida.submit();
             }, 2000);
-
         });
-
     </script>
 
 </body>
