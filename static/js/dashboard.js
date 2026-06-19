@@ -267,6 +267,44 @@ function guardarCita(event, tipo) {
 
 }
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tema = localStorage.getItem("tema");
+
+    if(tema === "oscuro"){
+        document.body.classList.add("modo-oscuro");
+        document.getElementById("btnTema").innerHTML = "☀️ Claro";
+    }
+
+});
+
+
+function toggleMenu(){
+    document.getElementById("menuMovil").classList.toggle("active");
+}
+
+
+function cambiarTema(){
+
+    document.body.classList.toggle("modo-oscuro");
+
+    const btn = document.getElementById("btnTema");
+
+    if(document.body.classList.contains("modo-oscuro")){
+
+        localStorage.setItem("tema","oscuro");
+        btn.innerHTML = "☀️ Claro";
+
+    }else{
+
+        localStorage.setItem("tema","claro");
+        btn.innerHTML = "🌙 Oscuro";
+    }
+}
+
+
 function mostrarListaCitas() {
 
     let html = '';
@@ -302,3 +340,7 @@ function logout() {
 }
 
 cargarEstadisticas();
+
+
+
+
