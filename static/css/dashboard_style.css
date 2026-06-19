@@ -596,8 +596,235 @@ tr:hover {
 
 }
 
+/* =========================
+   BOTON TEMA
+========================= */
+
+.btn-tema{
+    background:rgba(255,255,255,0.12);
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:12px;
+    cursor:pointer;
+    margin-right:15px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.btn-tema:hover{
+    background:rgba(255,255,255,0.2);
+}
 
 
+/* =========================
+   TEMA OSCURO
+========================= */
+
+body.modo-oscuro{
+
+    background:
+        linear-gradient(rgba(5,10,20,0.93),
+        rgba(5,10,20,0.93)),
+        url("../images/fondo.png");
+
+    color:#e8edf7;
+}
+
+
+/* NAVBAR */
+
+body.modo-oscuro .navbar{
+    background:rgba(8,15,30,0.95);
+}
+
+body.modo-oscuro .nav-item{
+    color:rgba(255,255,255,0.75);
+}
+
+body.modo-oscuro .nav-item:hover,
+body.modo-oscuro .nav-item.active{
+    background:rgba(255,255,255,0.08);
+}
+
+
+/* TARJETAS */
+
+body.modo-oscuro .inicio-card,
+body.modo-oscuro .tramites-section,
+body.modo-oscuro .stat-card,
+body.modo-oscuro .info-card{
+
+    background:#172236;
+    color:#e8edf7;
+}
+
+
+/* INICIO ITEMS */
+
+body.modo-oscuro .inicio-item{
+
+    background:#22314d;
+    border:1px solid #30486f;
+}
+
+body.modo-oscuro .inicio-item h3{
+    color:#7bb4ff;
+}
+
+
+/* TITULOS */
+
+body.modo-oscuro .section-title,
+body.modo-oscuro .banner-text h3{
+    color:#ffffff;
+}
+
+
+/* TEXTOS */
+
+body.modo-oscuro p,
+body.modo-oscuro td,
+body.modo-oscuro .section-description,
+body.modo-oscuro .profile-name{
+    color:#d7deeb;
+}
+
+
+/* BUSCADOR */
+
+body.modo-oscuro .search-box{
+
+    background:#22314d;
+    color:white;
+
+    border:1px solid #30486f;
+}
+
+body.modo-oscuro .search-box::placeholder{
+    color:#b7c3d6;
+}
+
+
+/* TABLAS */
+
+body.modo-oscuro table{
+    color:white;
+}
+
+body.modo-oscuro tr:nth-child(even){
+    background:#1d2b44;
+}
+
+body.modo-oscuro tr:hover{
+    background:#2a3b5c;
+}
+
+body.modo-oscuro td{
+    border-bottom:1px solid #30486f;
+}
+
+
+/* CITAS */
+
+body.modo-oscuro .citas-banner{
+    background:#22314d;
+}
+
+body.modo-oscuro .banner-text p{
+    color:#d7deeb;
+}
+
+
+/* FOOTER */
+
+body.modo-oscuro .footer{
+    background:#08111f;
+}
+
+
+/* BOTON HAMBURGUESA */
+.hamburger{
+    display:none;
+    background:none;
+    border:none;
+    color:white;
+    font-size:30px;
+    cursor:pointer;
+}
+
+/* MODO CELULAR */
+@media (max-width:900px){
+
+    .hamburger{
+    display:block;
+    background:none;
+    border:none;
+    color:white;
+    font-size:35px;
+    cursor:pointer;
+    margin-right:5px;
+}
+
+    .navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 20px;
+    position:relative;
+}
+
+    .nav-links{
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        width:100%;
+        background:#0f1f3d;
+        flex-direction:column;
+        padding:15px;
+        z-index:1000;
+    }
+
+    .nav-links.active{
+        display:flex;
+    }
+
+    .nav-right{
+        display:none;
+    }
+
+    .nav-logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+}
+
+
+.mobile-extra{
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px solid rgba(255,255,255,0.2);
+}
+
+.mobile-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:white;
+    cursor:pointer;
+    margin-top:15px;
+    padding:10px;
+    border-radius:10px;
+}
+
+.mobile-user:hover{
+    background:rgba(255,255,255,0.1);
+}
+.mobile-extra{
+    display:none;
+}
 /* ───────────────── RESPONSIVE ───────────────── */
 
 @media (max-width: 900px) {
@@ -613,6 +840,13 @@ tr:hover {
         flex-wrap: wrap;
         justify-content: center;
     }
+    .mobile-extra{
+    display:block;
+}
+
+.nav-right{
+    display:none;
+}
 
     .welcome-banner {
         flex-direction: column;
