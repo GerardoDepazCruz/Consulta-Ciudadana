@@ -1,99 +1,104 @@
+/* =========================================
+   1. ESTILOS BASE Y BOTONES CABOT
+========================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
-    font-family: Arial;
+    font-family: 'Inter', Arial, sans-serif;
     background: url("../images/fondomiscitas.jpg") no-repeat center center fixed;
     background-size: cover;
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0; color: #333;
+    transition: background 0.3s, color 0.3s;
 }
 
-.container {
-    width: 90%;
-    margin: auto;
-    padding: 30px;
+.container { width: 90%; max-width: 900px; margin: auto; padding: 30px; }
+
+h1 { text-align: center; color: #333; margin-bottom: 30px; }
+
+/* Botones Sistema */
+.btn-cabot {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 12px; padding: 12px 24px; border: none; border-radius: 12px;
+    font-family: 'Inter', sans-serif; font-weight: 600; cursor: pointer;
+    transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.btn-cabot:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
+.btn-secondary { background: #eef2ff; color: #1a5fa8; border: 2px solid #1a5fa8; }
+.btn-danger { background: #ef4444; color: #fff; width: 100%; }
+
+/* =========================================
+   2. FILTROS Y DISEÑO CALENDARIO
+========================================= */
+.filtros-container {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;
+}
+.btn-filtro {
+    background: white; color: #666; border: 2px solid transparent; padding: 10px 20px;
+}
+.btn-filtro.active {
+    background: #1a5fa8; color: white; border-color: #1a5fa8;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
+.calendario-lista {
+    display: flex; flex-direction: column; gap: 20px;
 }
 
-/* GRID */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+.calendar-card {
+    display: flex; background: white; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); transition: transform 0.2s;
+    border: 1px solid #e0e0e0;
+}
+.calendar-card:hover { transform: scale(1.01); }
+
+/* Bloque Izquierdo: Fecha */
+.calendar-date-box {
+    background: #1a5fa8; color: white; padding: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-width: 140px; text-align: center;
+}
+.calendar-date-box .emoji { font-size: 28px; margin-bottom: 5px; }
+.calendar-date-box .fecha { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+.calendar-date-box .hora { font-size: 14px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 6px; }
+
+/* Bloque Central: Detalles */
+.calendar-details {
+    padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
+}
+.calendar-details h3 { color: #1a5fa8; margin-bottom: 10px; font-size: 18px; }
+.calendar-details .id-text { color: #888; font-size: 14px; font-weight: normal; }
+.calendar-details p { color: #555; font-size: 14px; margin-bottom: 5px; line-height: 1.5; }
+.badge { display: inline-block; padding: 6px 12px; background: #eef2ff; color: #1a5fa8; border-radius: 8px; font-size: 12px; font-weight: 600; margin-top: 5px; align-self: flex-start; }
+
+/* Bloque Derecho: Acción */
+.calendar-actions {
+    padding: 20px; display: flex; align-items: center; justify-content: center;
+    border-left: 1px solid #eee; background: #fafafa; min-width: 180px;
 }
 
-/* CARD */
-.card {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    border-top: 5px solid #667eea;
+@media(max-width: 768px) {
+    .calendar-card { flex-direction: column; }
+    .calendar-date-box { min-width: 100%; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .calendar-actions { border-left: none; border-top: 1px solid #eee; }
 }
 
-.card h2 {
-    text-align: center;
-    color: #667eea;
-    margin-bottom: 15px;
+/* =========================================
+   3. MODO OSCURO (INCORPORADO)
+========================================= */
+body.dark-mode {
+    background: linear-gradient(rgba(5, 10, 18, 0.9), rgba(5, 10, 18, 0.9)), url("../images/fondomiscitas.jpg") !important;
+    background-size: cover !important; background-attachment: fixed !important; color: #e2e8f0 !important;
 }
+body.dark-mode h1 { color: #f8fafc !important; }
 
-/* ITEM */
-.item {
-    background: #f0f3ff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    font-size: 14px;
-}
+/* Tarjetas en modo oscuro */
+body.dark-mode .calendar-card { background: rgba(15, 23, 42, 0.95) !important; border-color: #334155 !important; }
+body.dark-mode .calendar-date-box { background: #1e3a8a !important; }
+body.dark-mode .calendar-details h3 { color: #60a5fa !important; }
+body.dark-mode .calendar-details p { color: #cbd5e1 !important; }
+body.dark-mode .calendar-actions { background: rgba(15, 23, 42, 1) !important; border-color: #334155 !important; }
+body.dark-mode .badge { background: #1e293b !important; color: #60a5fa !important; border: 1px solid #334155; }
 
-.badge {
-    display: inline-block;
-    padding: 4px 10px;
-    background: #667eea;
-    color: white;
-    border-radius: 8px;
-    font-size: 12px;
-}
-
-.btn-volver {
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 12px 22px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-volver:hover {
-    background: #1d4ed8;
-}
-
-.btn-eliminar{
-    margin-top:15px;
-    width:100%;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:#ff4d4d;
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.btn-eliminar:hover{
-    background:#e60000;
-    transform:scale(1.03);
-}
-
-@media(max-width: 900px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* Filtros en modo oscuro */
+body.dark-mode .btn-filtro { background: #1e293b !important; color: #cbd5e1 !important; border-color: #334155 !important; }
+body.dark-mode .btn-filtro.active { background: #3b82f6 !important; color: white !important; border-color: #3b82f6 !important; }
+body.dark-mode .btn-secondary { background: #1e293b !important; color: #cbd5e1 !important; border-color: #334155 !important; }

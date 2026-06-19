@@ -1,104 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Mis Citas</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Citas - CABOT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mis_citas.css') }}">
-
 </head>
-
 <body>
 
     <div class="container">
-        <button class="btn-volver" onclick="window.location.href='/dashboard'">
-            ← Volver
-        </button>
-        <h1>📅 MIS CITAS</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <button type="button" class="btn-cabot btn-secondary" onclick="window.location.href='/dashboard'">
+                ← Volver al Dashboard
+            </button>
+            <button type="button" class="btn-cabot btn-secondary" onclick="localToggleDarkMode()">
+                <span id="darkModeIcon">🌙</span> Tema
+            </button>
+        </div>
+        
+        <h1 style="text-align: center; margin-bottom: 30px; font-family: 'Inter', sans-serif;">📅 MIS CITAS</h1>
 
-        <div class="grid">
-
-            <!-- LICENCIAS -->
-            <div class="card">
-                <h2>🚗 CITAS DE LICENCIAS</h2>
-
-                {% for c in licencias %}
-                <div class="item">
-
-                    <b>ID:</b> {{ c.id }} <br>
-                    <b>Registrado:</b> {{ c.created_at }} <br>
-                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
-                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
-                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
-
-                    <span class="badge">{{ c.estado }}</span>
-
-                    <form action="/eliminar_cita/licencia/{{ c.id }}" method="POST">
-
-                        <button type="submit" class="btn-eliminar">
-                            🗑 Eliminar cita
-                        </button>
-
-                    </form>
-
-                </div>
-                {% endfor %}
-
-            </div>
-
-            <!-- PARTIDAS -->
-            <div class="card">
-                <h2>📄 CITAS DE PARTIDAS</h2>
-
-                {% for c in partidas %}
-                <div class="item">
-                    <b>ID:</b> {{ c.id }} <br>
-                    <b>Fecha registro:</b> {{ c.created_at }} <br>
-                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
-                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
-                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
-                    <span class="badge">{{ c.estado }}</span>
-                    <form action="/eliminar_cita/partida/{{ c.id }}" method="POST">
-
-                        <button type="submit" class="btn-eliminar">
-                            🗑 Eliminar cita
-                        </button>
-
-                    </form>
-                </div>
-                {% endfor %}
-
-            </div>
-
-            <!-- PADRONES -->
-            <div class="card">
-                <h2>📋 CITAS DE PADRONES</h2>
-
-                {% for c in padrones %}
-                <div class="item">
-                    <b>ID:</b> {{ c.id }} <br>
-                    <b>Fecha registro:</b> {{ c.created_at }} <br>
-                    <b>📅 Cita:</b> {{ c.fecha_cita }} <br>
-                    <b>⏰ Hora:</b> {{ c.hora_cita }} <br>
-                    <b>📍 Lugar:</b> {{ c.lugar }} <br>
-                    <span class="badge">{{ c.estado }}</span>
-                    <form action="/eliminar_cita/padron/{{ c.id }}" method="POST">
-
-                        <button type="submit" class="btn-eliminar">
-                            🗑 Eliminar cita
-                        </button>
-
-                    </form>
-                </div>
-                {% endfor %}
-
-            </div>
-
+        <div class="filtros-container">
+            <button class="btn-cabot btn-filtro active" onclick="filtrarCitas('todas', this)">Todas</button>
+            <button class="btn-cabot btn-filtro" onclick="filtrarCitas('licencias', this)">🚗 Licencias</button>
+            <button class="btn-cabot btn-filtro" onclick="filtrarCitas('partidas', this)">📄 Partidas</button>
+            <button class="btn-cabot btn-filtro" onclick="filtrarCitas('padrones', this)">📋 Padrones</button>
         </div>
 
+        <div class="calendario-lista">
+            
+            {% for c in licencias %}
+            <div class="calendar-card" data-tipo="licencias">
+                <div class="calendar-date-box">
+                    <span class="emoji">🚗</span>
+                    <span class="fecha">{{ c.fecha_cita }}</span>
+                    <span class="hora">{{ c.hora_cita }}</span>
+                </div>
+                <div class="calendar-details">
+                    <h3>Trámite de Licencia <span class="id-text">#{{ c.id }}</span></h3>
+                    <p><b>📍 Lugar:</b> {{ c.lugar }}</p>
+                    <p><b>Registro:</b> {{ c.created_at }}</p>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                <div class="calendar-actions">
+                    <form action="/eliminar_cita/licencia/{{ c.id }}" method="POST">
+                        <button type="submit" class="btn-cabot btn-danger">
+                            <span>🗑</span> Eliminar cita
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% for c in partidas %}
+            <div class="calendar-card" data-tipo="partidas">
+                <div class="calendar-date-box">
+                    <span class="emoji">📄</span>
+                    <span class="fecha">{{ c.fecha_cita }}</span>
+                    <span class="hora">{{ c.hora_cita }}</span>
+                </div>
+                <div class="calendar-details">
+                    <h3>Partida Registral <span class="id-text">#{{ c.id }}</span></h3>
+                    <p><b>📍 Lugar:</b> {{ c.lugar }}</p>
+                    <p><b>Registro:</b> {{ c.created_at }}</p>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                <div class="calendar-actions">
+                    <form action="/eliminar_cita/partida/{{ c.id }}" method="POST">
+                        <button type="submit" class="btn-cabot btn-danger">
+                            <span>🗑</span> Eliminar cita
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% for c in padrones %}
+            <div class="calendar-card" data-tipo="padrones">
+                <div class="calendar-date-box">
+                    <span class="emoji">📋</span>
+                    <span class="fecha">{{ c.fecha_cita }}</span>
+                    <span class="hora">{{ c.hora_cita }}</span>
+                </div>
+                <div class="calendar-details">
+                    <h3>Padrón Municipal <span class="id-text">#{{ c.id }}</span></h3>
+                    <p><b>📍 Lugar:</b> {{ c.lugar }}</p>
+                    <p><b>Registro:</b> {{ c.created_at }}</p>
+                    <span class="badge">{{ c.estado }}</span>
+                </div>
+                <div class="calendar-actions">
+                    <form action="/eliminar_cita/padron/{{ c.id }}" method="POST">
+                        <button type="submit" class="btn-cabot btn-danger">
+                            <span>🗑</span> Eliminar cita
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
     </div>
 
-</body>
+    <script>
+        // Lógica para filtrar las tarjetas sin recargar la página
+        function filtrarCitas(tipo, boton) {
+            // Actualizar botones activos
+            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
+            boton.classList.add('active');
 
+            // Mostrar/Ocultar tarjetas
+            const tarjetas = document.querySelectorAll('.calendar-card');
+            tarjetas.forEach(tarjeta => {
+                if (tipo === 'todas' || tarjeta.getAttribute('data-tipo') === tipo) {
+                    tarjeta.style.display = 'flex';
+                } else {
+                    tarjeta.style.display = 'none';
+                }
+            });
+        }
+
+        // Lógica del modo oscuro independiente
+        function localToggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').textContent = '☀️';
+        }
+    </script>
+</body>
 </html>
